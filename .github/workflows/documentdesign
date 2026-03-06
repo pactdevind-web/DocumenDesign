@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FormFlow – Customer Intake Form</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#2563eb;--blue-light:#eff4ff;--blue-mid:#bfcffb;
+  --red:#ef4444;
+  --g50:#f8fafc;--g100:#f1f5f9;--g200:#e2e8f0;--g300:#cbd5e1;
+  --g400:#94a3b8;--g500:#64748b;--g600:#475569;--g700:#334155;
+  --g800:#1e293b;--g900:#0f172a;--white:#fff;
+  --rsm:6px;--r:10px;--rlg:14px;
+  --ssm:0 1px 3px rgba(0,0,0,.08);--s:0 4px 16px rgba(0,0,0,.10);--slg:0 8px 32px rgba(0,0,0,.16);
+  --f:'DM Sans',sans-serif;--t:.16s ease;
+}
+body{font-family:var(--f);background:var(--g50);color:var(--g900);height:100vh;display:flex;flex-direction:column;overflow:hidden;font-size:14px}
+
+/* TOPBAR */
+.topbar{height:52px;background:var(--white);border-bottom:1px solid var(--g200);display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0;z-index:200}
+.t-logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px}
+.t-bc{display:flex;align-items:center;gap:6px;color:var(--g500);font-size:13px}
+.t-bc span{color:var(--g900);font-weight:500}
+.t-sep{color:var(--g300)}
+.t-sp{flex:1}
+.btn-prev{display:flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--g200);border-radius:var(--rsm);background:var(--white);color:var(--g700);font-family:var(--f);font-size:13px;font-weight:500;cursor:pointer;transition:var(--t)}
+.btn-prev:hover{background:var(--g100)}
+.btn-pub{padding:7px 18px;border:none;border-radius:var(--rsm);background:var(--blue);color:var(--white);font-family:var(--f);font-size:13px;font-weight:600;cursor:pointer;transition:var(--t)}
+.btn-pub:hover{background:#1d4ed8}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#f59e0b);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:white}
+
+/* WORKSPACE */
+.workspace{flex:1;display:grid;grid-template-columns:52px 240px 1fr 268px;overflow:hidden}
+
+/* COL1 RAIL */
+.col-rail{background:var(--white);border-right:1px solid var(--g200);display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:6px}
+.ri{width:36px;height:36px;border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;color:var(--g500);cursor:pointer;transition:var(--t)}
+.ri:hover{background:var(--blue-light);color:var(--blue)}
+.ri.active{background:var(--blue);color:white}
+.rsp{flex:1}
+
+/* COL2 COMPONENTS */
+.col-comp{background:var(--white);border-right:1px solid var(--g200);display:flex;flex-direction:column;overflow:hidden}
+.comp-hdr{padding:18px 16px 10px;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--g400);text-transform:uppercase}
+.comp-list{padding:6px 10px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:6px}
+.comp-item{display:flex;align-items:center;gap:12px;padding:11px 12px;border:1px solid var(--g200);border-radius:var(--r);background:var(--white);cursor:grab;transition:var(--t);user-select:none}
+.comp-item:hover{border-color:var(--blue-mid);background:var(--blue-light);box-shadow:var(--ssm)}
+.comp-item.is-dragging{opacity:.3}
+.ci{width:34px;height:34px;border-radius:var(--rsm);background:var(--g100);display:flex;align-items:center;justify-content:center;color:var(--g600);flex-shrink:0}
+.cn{font-size:13px;font-weight:600;color:var(--g800)}
+.cd{font-size:11px;color:var(--g400);margin-top:1px}
+
+/* COL3 CANVAS */
+.col-canvas{background:var(--g50);overflow-y:auto;padding:32px 36px;background-image:radial-gradient(var(--g300) 1px,transparent 1px);background-size:22px 22px}
+.cv-card{background:var(--white);border:1px solid var(--g200);border-radius:var(--rlg);box-shadow:var(--s);min-height:520px}
+.cv-hdr{padding:26px 28px 18px;border-bottom:1px solid var(--g100)}
+.cv-title{font-size:22px;font-weight:700;color:var(--g900)}
+.cv-sub{font-size:13.5px;color:var(--g500);margin-top:4px}
+.cv-body{padding:16px 20px 24px;display:flex;flex-direction:column;gap:0}
+
+/* FORM ROW */
+.form-row{display:flex;flex-direction:column;margin-bottom:10px;position:relative}
+.row-tb{display:flex;align-items:center;gap:6px;margin-bottom:5px;opacity:0;transition:var(--t);min-height:22px}
+.form-row:hover .row-tb{opacity:1}
+.rl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400)}
+.rsp2{flex:1}
+.rbtn{display:flex;align-items:center;gap:4px;padding:3px 8px;border:1px solid var(--g200);border-radius:4px;background:var(--white);color:var(--g500);font-family:var(--f);font-size:11px;font-weight:500;cursor:pointer;transition:var(--t)}
+.rbtn:hover{border-color:var(--blue-mid);color:var(--blue);background:var(--blue-light)}
+.rbtn.danger:hover{border-color:#fca5a5;color:var(--red);background:#fff5f5}
+.row-inner{display:grid;gap:10px;position:relative}
+.row-drop-ind{height:3px;border-radius:2px;background:var(--blue);margin-bottom:8px;opacity:0;transition:opacity .1s;pointer-events:none}
+.row-drop-ind.active{opacity:1}
+
+/* CELL */
+.field-cell{position:relative;min-height:92px}
+.cell-empty-tgt{position:absolute;inset:0;border:2px dashed var(--blue-mid);border-radius:var(--r);background:rgba(37,99,235,.03);display:flex;align-items:center;justify-content:center;color:var(--g400);font-size:12px;font-weight:500;transition:var(--t);pointer-events:none;opacity:0}
+.field-cell.is-empty .cell-empty-tgt{opacity:1;pointer-events:all}
+.field-cell.drag-over .cell-empty-tgt{border-color:var(--blue);background:var(--blue-light);color:var(--blue);opacity:1}
+
+/* FIELD CARD */
+.field-card{border:2px solid transparent;border-radius:var(--r);background:var(--white);padding:14px 14px 10px;cursor:pointer;transition:var(--t);position:relative;user-select:none}
+.field-card:hover{border-color:var(--blue-mid)}
+.field-card.selected{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.field-card.field-dragging{opacity:.3}
+.card-handle{position:absolute;top:7px;left:50%;transform:translateX(-50%);color:var(--g300);cursor:grab;opacity:0;transition:var(--t)}
+.field-card:hover .card-handle{opacity:1}
+.fc-label{font-size:13px;font-weight:600;color:var(--g700);margin-bottom:8px}
+.fc-input{width:100%;padding:8px 11px;border:1px solid var(--g200);border-radius:var(--rsm);font-family:var(--f);font-size:13px;color:var(--g400);background:var(--white);outline:none;pointer-events:none}
+.fc-badge{display:inline-flex;align-items:center;gap:4px;margin-top:7px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+.fc-del{position:absolute;top:-9px;right:-9px;width:24px;height:24px;border-radius:50%;background:var(--red);border:none;color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:var(--t);font-size:11px;z-index:10}
+.field-card:hover .fc-del,.field-card.selected .fc-del{opacity:1}
+.fc-del:hover{background:#dc2626;transform:scale(1.12)}
+
+/* ADD ROW ZONE */
+.add-row-zone{border:2px dashed var(--blue-mid);border-radius:var(--r);background:rgba(37,99,235,.02);min-height:88px;margin-top:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:var(--blue);font-size:13px;font-weight:500;transition:var(--t);cursor:default}
+.add-row-zone.drag-over,.add-row-zone:hover{border-color:var(--blue);background:var(--blue-light);box-shadow:0 0 0 3px rgba(37,99,235,.07)}
+.drop-plus{width:28px;height:28px;border-radius:50%;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:300}
+
+/* COL4 PROPS */
+.col-props{background:var(--white);border-left:1px solid var(--g200);display:flex;flex-direction:column;overflow:hidden}
+.ph{padding:15px 18px 12px;border-bottom:1px solid var(--g100);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.pt{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400)}
+.pbadge{padding:3px 8px;border-radius:4px;background:var(--blue);color:white;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.pb{padding:16px 18px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:16px}
+.pe{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--g400);padding:40px 20px;text-align:center;font-size:13px}
+.pe svg{opacity:.3}
+.pg{display:flex;flex-direction:column;gap:5px}
+.pl{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g400)}
+.pi{width:100%;padding:8px 11px;border:1px solid var(--g200);border-radius:var(--rsm);font-family:var(--f);font-size:13px;color:var(--g900);background:var(--white);outline:none;transition:var(--t)}
+.pi:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.ptr{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border:1px solid var(--g200);border-radius:var(--r)}
+.ptl2{font-size:13px;font-weight:600;color:var(--g800)}
+.pts{font-size:11px;color:var(--g400);margin-top:1px}
+.toggle{position:relative;display:inline-block;width:38px;height:22px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.tslider{position:absolute;inset:0;background:var(--g300);border-radius:11px;cursor:pointer;transition:.22s}
+.tslider:before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:white;border-radius:50%;transition:.22s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle input:checked+.tslider{background:var(--blue)}
+.toggle input:checked+.tslider:before{transform:translateX(16px)}
+.pdiv{display:flex;align-items:center;gap:10px;cursor:pointer;padding:2px 0}
+.pdiv-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--g500);white-space:nowrap}
+.pdiv-line{flex:1;height:1px;background:var(--g200)}
+.pdiv svg{color:var(--g400);transition:var(--t)}
+.pdiv.open svg{transform:rotate(180deg)}
+.adv{display:flex;flex-direction:column;gap:12px}
+.adv.hidden{display:none}
+.pf{padding:13px 18px;border-top:1px solid var(--g100);display:flex;gap:10px;flex-shrink:0}
+.btn-rst{flex:1;padding:9px;border:1px solid var(--g200);border-radius:var(--rsm);background:var(--white);font-family:var(--f);font-size:13px;font-weight:500;color:var(--g700);cursor:pointer;transition:var(--t)}
+.btn-rst:hover{background:var(--g100)}
+.btn-apl{flex:1;padding:9px;border:none;border-radius:var(--rsm);background:var(--blue);font-family:var(--f);font-size:13px;font-weight:600;color:white;cursor:pointer;transition:var(--t)}
+.btn-apl:hover{background:#1d4ed8}
+
+/* GHOST */
+.ghost{position:fixed;pointer-events:none;opacity:.9;z-index:9999;padding:9px 14px;background:var(--white);border:1.5px solid var(--blue);border-radius:var(--r);box-shadow:var(--slg);font-size:13px;font-weight:600;color:var(--blue);display:none;align-items:center;gap:8px;transform:rotate(2deg)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--g900);color:white;padding:9px 18px;border-radius:var(--r);font-size:13px;font-weight:500;opacity:0;transition:.28s ease;z-index:9999;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--g200);border-radius:99px}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="t-logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <rect width="28" height="28" rx="7" fill="#2563eb"/>
+      <rect x="6" y="7" width="16" height="3" rx="1.5" fill="white"/>
+      <rect x="6" y="12.5" width="11" height="3" rx="1.5" fill="white" opacity=".7"/>
+      <rect x="6" y="18" width="14" height="3" rx="1.5" fill="white" opacity=".5"/>
+    </svg>FormFlow
+  </div>
+  <div class="t-bc">
+    <span style="color:var(--g500)">My Projects</span>
+    <span class="t-sep">›</span>
+    <span>Customer Intake Form</span>
+  </div>
+  <div class="t-sp"></div>
+  <button class="btn-prev" onclick="showToast('Preview mode coming soon')">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Preview
+  </button>
+  <button class="btn-pub" onclick="showToast('Form published! 🎉')">Publish</button>
+  <div class="avatar">JD</div>
+</header>
+
+<div class="workspace">
+  <!-- RAIL -->
+  <nav class="col-rail">
+    <div class="ri active">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    </div>
+    <div class="ri"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div>
+    <div class="ri"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div>
+    <div class="ri"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div>
+    <div class="rsp"></div>
+    <div class="ri"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+    <div class="ri"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+  </nav>
+
+  <!-- COMPONENTS -->
+  <aside class="col-comp">
+    <div class="comp-hdr">Components</div>
+    <div class="comp-list" id="compList"></div>
+  </aside>
+
+  <!-- CANVAS -->
+  <main class="col-canvas">
+    <div class="cv-card">
+      <div class="cv-hdr">
+        <div class="cv-title">Customer Intake Form</div>
+        <div class="cv-sub">Please provide the details below to initialize your account.</div>
+      </div>
+      <div class="cv-body" id="formBody">
+        <div class="add-row-zone" id="addRowZone">
+          <div class="drop-plus">+</div>
+          <span>Drop elements here</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- PROPS -->
+  <aside class="col-props">
+    <div class="ph">
+      <span class="pt">Properties</span>
+      <span class="pbadge" id="propsBadge" style="display:none">TEXT</span>
+    </div>
+    <div class="pb" id="propsBody">
+      <div class="pe" id="propsEmpty">
+        <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+        <div>Select a field to<br>edit its properties</div>
+      </div>
+      <div id="propsContent" style="display:none;flex-direction:column;gap:16px;"></div>
+    </div>
+    <div class="pf" id="propsFooter" style="display:none">
+      <button class="btn-rst" id="btnReset">Reset</button>
+      <button class="btn-apl" id="btnApply">Apply</button>
+    </div>
+  </aside>
+</div>
+
+<div class="ghost" id="ghost"><span id="gIcon"></span><span id="gLabel"></span></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── COMPONENT DEFINITIONS ─────────────────────────────────── */
+const COMPS = [
+  {id:'text',     name:'Text Input',  desc:'Short/Long text',   badge:'TEXT INPUT', color:'#2563eb', ph:'e.g. Acme Corp',   lbl:'Text Field',
+   icon:`<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>`,mockType:'text'},
+  {id:'numeric',  name:'Numeric',     desc:'Integers, decimals',badge:'NUMERIC',    color:'#7c3aed', ph:'0.00',             lbl:'Number Field',
+   icon:`<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>`,mockType:'number'},
+  {id:'date',     name:'Date Picker', desc:'Calendar select',   badge:'DATE',       color:'#059669', ph:'MM / DD / YYYY',   lbl:'Date Field',
+   icon:`<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,mockType:'text'},
+  {id:'dropdown', name:'Dropdown',    desc:'Single selection',  badge:'DROPDOWN',   color:'#d97706', ph:'Select an option…',lbl:'Dropdown Field',
+   icon:`<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>`,mockType:'text'},
+  {id:'dimension',name:'Dimension',   desc:'Units & scales',    badge:'DIMENSION',  color:'#db2777', ph:'0 px',             lbl:'Dimension Field',
+   icon:`<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 3H3v18h18V3z"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>`,mockType:'text'},
+];
+
+/* ── STATE ─────────────────────────────────────────────────── */
+// rows: Array<{ rowId:string, cells: Array<Field|null> }>
+// each row has 1-4 cells; null = empty slot
+let rows = [
+  { rowId:rid(), cells:[
+    mkField('text',    'Account Name',       'e.g. Acme Corp', true,  3),
+    mkField('numeric', 'Credit Limit (USD)', '0.00',           false, ''),
+  ]},
+];
+let selUid = rows[0].cells[0].uid;
+let advOpen = true;
+let dragSrc = null; // {type:'comp',compId} | {type:'field',uid,fromRow,fromCol}
+
+function uid(){ return Math.random().toString(36).slice(2,9) }
+function rid(){ return 'r'+Math.random().toString(36).slice(2,8) }
+function gc(id){ return COMPS.find(c=>c.id===id) }
+function mkField(compId,label,ph,req,minLen){
+  return {uid:uid(),compId,label,placeholder:ph,required:req,minLength:minLen,maxLength:''}
+}
+function findF(u){ for(const r of rows) for(const c of r.cells) if(c&&c.uid===u) return c; return null }
+function findLoc(u){
+  for(let ri=0;ri<rows.length;ri++)
+    for(let ci=0;ci<rows[ri].cells.length;ci++)
+      if(rows[ri].cells[ci]&&rows[ri].cells[ci].uid===u) return {ri,ci}
+  return null
+}
+
+/* ── RENDER COMPONENTS LIST ────────────────────────────────── */
+function renderComps(){
+  document.getElementById('compList').innerHTML=COMPS.map(c=>`
+    <div class="comp-item" draggable="true" data-cid="${c.id}"
+         ondragstart="cDragStart(event,'${c.id}')" ondragend="onDragEnd()">
+      <div class="ci">${c.icon}</div>
+      <div style="flex:1;min-width:0"><div class="cn">${c.name}</div><div class="cd">${c.desc}</div></div>
+      <div style="color:var(--g300)">${dots()}</div>
+    </div>`).join('')
+}
+function dots(){return`<svg width="13" height="13" fill="none" viewBox="0 0 24 24"><circle cx="9" cy="5" r="1.3" fill="#94a3b8"/><circle cx="15" cy="5" r="1.3" fill="#94a3b8"/><circle cx="9" cy="12" r="1.3" fill="#94a3b8"/><circle cx="15" cy="12" r="1.3" fill="#94a3b8"/><circle cx="9" cy="19" r="1.3" fill="#94a3b8"/><circle cx="15" cy="19" r="1.3" fill="#94a3b8"/></svg>`}
+
+/* ── RENDER CANVAS ─────────────────────────────────────────── */
+function renderCanvas(){
+  const body=document.getElementById('formBody');
+  const zone=document.getElementById('addRowZone');
+  body.querySelectorAll('.form-row,.row-drop-ind').forEach(e=>e.remove());
+
+  rows.forEach((row,ri)=>{
+    // before-row drop indicator
+    const ind=document.createElement('div');
+    ind.className='row-drop-ind'; ind.id='ind-'+row.rowId;
+    body.insertBefore(ind,zone);
+
+    const rowEl=document.createElement('div');
+    rowEl.className='form-row'; rowEl.dataset.rowId=row.rowId;
+
+    // toolbar
+    const tb=document.createElement('div'); tb.className='row-tb';
+    tb.innerHTML=`<span class="rl">Row ${ri+1} · ${row.cells.length} col${row.cells.length>1?'s':''}</span>
+      <span class="rsp2"></span>
+      ${row.cells.length<4?`<button class="rbtn" onclick="addCol('${row.rowId}')">+ Column</button>`:''}
+      <button class="rbtn danger" onclick="delRow('${row.rowId}')">✕ Row</button>`;
+    rowEl.appendChild(tb);
+
+    // grid inner
+    const inner=document.createElement('div');
+    inner.className='row-inner';
+    inner.style.gridTemplateColumns=`repeat(${row.cells.length},1fr)`;
+
+    row.cells.forEach((cell,ci)=>{
+      const cellEl=document.createElement('div');
+      cellEl.className='field-cell'+(cell?'':' is-empty');
+      cellEl.dataset.rowId=row.rowId; cellEl.dataset.ci=ci;
+
+      // empty placeholder
+      const emptyTgt=document.createElement('div');
+      emptyTgt.className='cell-empty-tgt'; emptyTgt.textContent='Drop here';
+      cellEl.appendChild(emptyTgt);
+
+      if(cell){
+        const comp=gc(cell.compId);
+        const card=document.createElement('div');
+        card.className='field-card'+(cell.uid===selUid?' selected':'');
+        card.dataset.uid=cell.uid; card.draggable=true;
+        card.innerHTML=`
+          <div class="card-handle">${dots()}</div>
+          <button class="fc-del" onclick="delField('${cell.uid}',event)">✕</button>
+          <div class="fc-label">${esc(cell.label)}</div>
+          <input class="fc-input" type="${comp.mockType}" placeholder="${esc(cell.placeholder)}" readonly tabindex="-1"/>
+          <div class="fc-badge" style="color:${comp.color}">
+            ${comp.icon.replace(/stroke="currentColor"/g,`stroke="${comp.color}"`)}${comp.badge}
+          </div>`;
+        card.addEventListener('click',e=>{e.stopPropagation();selField(cell.uid)});
+        card.addEventListener('dragstart',e=>fDragStart(e,cell.uid,row.rowId,ci));
+        card.addEventListener('dragend',onDragEnd);
+        cellEl.appendChild(card);
+      }
+
+      cellEl.addEventListener('dragover', e=>cellOver(e,row.rowId,ci));
+      cellEl.addEventListener('dragleave',e=>cellLeave(e,cellEl));
+      cellEl.addEventListener('drop',     e=>cellDrop(e,row.rowId,ci));
+      inner.appendChild(cellEl);
+    });
+
+    rowEl.appendChild(inner);
+    body.insertBefore(rowEl,zone);
+  });
+
+  // trailing indicator
+  const trail=document.createElement('div');
+  trail.className='row-drop-ind'; trail.id='ind-trail';
+  body.insertBefore(trail,zone);
+}
+
+/* ── RENDER PROPS ──────────────────────────────────────────── */
+function renderProps(){
+  const f=findF(selUid);
+  const empty=document.getElementById('propsEmpty');
+  const cont=document.getElementById('propsContent');
+  const badge=document.getElementById('propsBadge');
+  const footer=document.getElementById('propsFooter');
+  if(!f){
+    empty.style.display='flex'; cont.style.display='none';
+    badge.style.display='none'; footer.style.display='none'; return;
+  }
+  const comp=gc(f.compId);
+  empty.style.display='none'; cont.style.display='flex';
+  badge.style.display='inline-flex'; badge.textContent=comp.id.toUpperCase();
+  footer.style.display='flex';
+  cont.innerHTML=`
+    <div class="pg"><div class="pl">Field Label</div>
+      <input class="pi" value="${esc(f.label)}" oninput="liveUpd('label',this.value)"/></div>
+    <div class="pg"><div class="pl">Placeholder</div>
+      <input class="pi" value="${esc(f.placeholder)}" oninput="liveUpd('placeholder',this.value)"/></div>
+    <div class="ptr">
+      <div><div class="ptl2">Required Field</div><div class="pts">Validation will trigger</div></div>
+      <label class="toggle"><input type="checkbox" ${f.required?'checked':''} onchange="liveUpd('required',this.checked)"/><span class="tslider"></span></label>
+    </div>
+    <div class="pdiv ${advOpen?'open':''}" onclick="togAdv()" id="advDiv">
+      <span class="pdiv-label">Advanced Settings</span>
+      <div class="pdiv-line"></div>
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="adv ${advOpen?'':'hidden'}" id="advSet">
+      <div class="pg"><div class="pl">Minimum Length</div>
+        <input class="pi" type="number" value="${f.minLength}" placeholder="—" oninput="liveUpd('minLength',this.value)"/></div>
+      <div class="pg"><div class="pl">Maximum Length</div>
+        <input class="pi" type="number" value="${f.maxLength||''}" placeholder="—" oninput="liveUpd('maxLength',this.value)"/></div>
+    </div>`;
+  document.getElementById('btnApply').onclick=()=>showToast('Properties applied ✓');
+  document.getElementById('btnReset').onclick=()=>{renderProps();showToast('Properties reset')};
+}
+
+function togAdv(){
+  advOpen=!advOpen;
+  document.getElementById('advDiv').classList.toggle('open',advOpen);
+  document.getElementById('advSet').classList.toggle('hidden',!advOpen);
+}
+function liveUpd(k,v){ const f=findF(selUid); if(!f)return; f[k]=v; renderCanvas() }
+function selField(u){ selUid=u; renderCanvas(); renderProps() }
+
+function delField(u,e){
+  e&&e.stopPropagation();
+  for(const row of rows){
+    const ci=row.cells.findIndex(c=>c&&c.uid===u);
+    if(ci!==-1){
+      if(row.cells.length===1) rows=rows.filter(r=>r.rowId!==row.rowId);
+      else row.cells.splice(ci,1);
+      break;
+    }
+  }
+  if(selUid===u) selUid=rows.length&&rows[0].cells.find(Boolean)?.uid||null;
+  renderCanvas(); renderProps(); showToast('Field removed');
+}
+
+function delRow(rowId){
+  rows=rows.filter(r=>r.rowId!==rowId);
+  selUid=rows.length?rows[0].cells.find(Boolean)?.uid||null:null;
+  renderCanvas(); renderProps(); showToast('Row removed');
+}
+
+function addCol(rowId){
+  const row=rows.find(r=>r.rowId===rowId);
+  if(!row||row.cells.length>=4)return;
+  row.cells.push(null);
+  renderCanvas(); showToast('Column added – drop a field into it');
+}
+
+/* ── DRAG SOURCES ──────────────────────────────────────────── */
+function cDragStart(e,compId){
+  dragSrc={type:'comp',compId};
+  e.dataTransfer.effectAllowed='copy';
+  setBlankDragImage(e);
+  const comp=gc(compId);
+  showGhost(comp.name,comp.icon);
+  document.querySelector(`[data-cid="${compId}"]`).classList.add('is-dragging');
+}
+
+function fDragStart(e,u,fromRow,fromCol){
+  dragSrc={type:'field',uid:u,fromRow,fromCol};
+  e.dataTransfer.effectAllowed='move';
+  setBlankDragImage(e);
+  const f=findF(u); if(!f)return;
+  showGhost(f.label,gc(f.compId).icon);
+  setTimeout(()=>{
+    const card=document.querySelector(`.field-card[data-uid="${u}"]`);
+    if(card)card.classList.add('field-dragging');
+  },0);
+}
+
+function onDragEnd(){
+  dragSrc=null; hideGhost();
+  document.querySelectorAll('.is-dragging,.field-dragging').forEach(el=>el.classList.remove('is-dragging','field-dragging'));
+  document.querySelectorAll('.drag-over').forEach(el=>el.classList.remove('drag-over'));
+  document.querySelectorAll('.row-drop-ind.active').forEach(el=>el.classList.remove('active'));
+}
+
+/* ── CELL DROP HANDLERS ────────────────────────────────────── */
+function cellOver(e,rowId,ci){
+  e.preventDefault(); e.stopPropagation();
+  const cellEl=document.querySelector(`.field-cell[data-row-id="${rowId}"][data-ci="${ci}"]`);
+  if(cellEl)cellEl.classList.add('drag-over');
+}
+function cellLeave(e,cellEl){
+  if(!cellEl.contains(e.relatedTarget))cellEl.classList.remove('drag-over');
+}
+function cellDrop(e,rowId,colIdx){
+  e.preventDefault(); e.stopPropagation();
+  const cellEl=document.querySelector(`.field-cell[data-row-id="${rowId}"][data-ci="${colIdx}"]`);
+  if(cellEl)cellEl.classList.remove('drag-over');
+  if(!dragSrc)return;
+
+  const row=rows.find(r=>r.rowId===rowId); if(!row)return;
+
+  if(dragSrc.type==='comp'){
+    const comp=gc(dragSrc.compId);
+    const nf=newField(comp);
+    if(row.cells[colIdx]===null){
+      row.cells[colIdx]=nf;
+    } else if(row.cells.length<4){
+      row.cells.splice(colIdx,0,nf);
+    } else {
+      // row full → new row below
+      const ri=rows.findIndex(r=>r.rowId===rowId);
+      rows.splice(ri+1,0,{rowId:rid(),cells:[nf]});
+    }
+    selUid=nf.uid;
+    showToast(`"${comp.name}" added`);
+  } else {
+    const {uid:su,fromRow,fromCol}=dragSrc;
+    if(fromRow===rowId&&fromCol===colIdx)return;
+    const srcRow=rows.find(r=>r.rowId===fromRow);
+    const moving=srcRow.cells[fromCol];
+    const dest=row.cells[colIdx];
+    if(fromRow===rowId){
+      // same row swap
+      row.cells[fromCol]=dest; row.cells[colIdx]=moving;
+    } else {
+      if(dest===null){
+        row.cells[colIdx]=moving; srcRow.cells[fromCol]=null; cleanRow(srcRow);
+      } else {
+        srcRow.cells[fromCol]=dest; row.cells[colIdx]=moving;
+      }
+    }
+    selUid=su;
+    showToast('Field moved');
+  }
+  renderCanvas(); renderProps();
+}
+
+/* ── ADD-ROW ZONE ──────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded',()=>{
+  const zone=document.getElementById('addRowZone');
+  zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag-over')});
+  zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
+  zone.addEventListener('drop',e=>{
+    e.preventDefault(); zone.classList.remove('drag-over');
+    if(!dragSrc)return;
+    if(dragSrc.type==='comp'){
+      const comp=gc(dragSrc.compId); const nf=newField(comp);
+      rows.push({rowId:rid(),cells:[nf]}); selUid=nf.uid;
+      showToast(`New row with "${comp.name}"`);
+    } else {
+      const {uid:su,fromRow,fromCol}=dragSrc;
+      const srcRow=rows.find(r=>r.rowId===fromRow);
+      const moving=srcRow.cells[fromCol];
+      srcRow.cells[fromCol]=null; cleanRow(srcRow);
+      rows.push({rowId:rid(),cells:[moving]}); selUid=su;
+      showToast('Moved to new row');
+    }
+    renderCanvas(); renderProps();
+  });
+});
+
+/* ── ROW INSERTION INDICATORS on dragover ──────────────────── */
+document.addEventListener('dragover',e=>{
+  updateGhost(e);
+  if(!dragSrc)return;
+  document.querySelectorAll('.row-drop-ind').forEach(el=>el.classList.remove('active'));
+  const inds=[...document.querySelectorAll('.row-drop-ind')];
+  let best=null,bestD=Infinity;
+  inds.forEach(ind=>{
+    const r=ind.getBoundingClientRect();
+    const d=Math.abs(e.clientY-r.top);
+    if(d<bestD){bestD=d;best=ind}
+  });
+  if(best&&bestD<48)best.classList.add('active');
+});
+
+/* ── HELPERS ───────────────────────────────────────────────── */
+function newField(comp){
+  return {uid:uid(),compId:comp.id,label:comp.lbl,placeholder:comp.ph,required:false,minLength:'',maxLength:''}
+}
+function cleanRow(row){
+  while(row.cells.length>1&&row.cells[row.cells.length-1]===null)row.cells.pop();
+  if(row.cells.every(c=>c===null))rows=rows.filter(r=>r.rowId!==row.rowId);
+}
+function setBlankDragImage(e){
+  const img=new Image();img.src='data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
+  e.dataTransfer.setDragImage(img,0,0);
+}
+function showGhost(label,iconHtml){
+  const g=document.getElementById('ghost');
+  document.getElementById('gLabel').textContent=label;
+  document.getElementById('gIcon').innerHTML=iconHtml;
+  g.style.display='flex';
+}
+function hideGhost(){document.getElementById('ghost').style.display='none'}
+function updateGhost(e){
+  const g=document.getElementById('ghost');
+  if(g.style.display==='flex'){g.style.left=(e.clientX+14)+'px';g.style.top=(e.clientY+10)+'px'}
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}
+
+let _tt;
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+/* ── BOOT ──────────────────────────────────────────────────── */
+renderComps();
+renderCanvas();
+renderProps();
+</script>
+</body>
+</html>
