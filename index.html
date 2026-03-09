@@ -196,23 +196,59 @@ body{font-family:var(--f);background:var(--g50);color:var(--g900);height:100vh;d
 .grid-drop-zone.drag-over{border-color:var(--blue);background:var(--blue-light)}
 
 /* ─── FOOTER ZONE ──────────────────────────────────────────── */
-.footer-wrap{padding:14px 20px 20px}
-.footer-grid{border:1px solid var(--g200);border-radius:var(--r);overflow:hidden}
-.footer-row{display:flex;align-items:stretch;border-bottom:1px solid var(--g100)}
-.footer-row:last-child{border-bottom:none}
-.footer-cell{flex:1;min-width:110px;padding:10px 14px;border-right:1px solid var(--g100);display:flex;flex-direction:column;justify-content:center;cursor:pointer;transition:var(--t);position:relative}
-.footer-cell:last-child{border-right:none}
-.footer-cell:hover{background:var(--blue-light)}
-.footer-cell.sel{background:rgba(124,58,237,.05);border:2px solid var(--purple)}
-.footer-cell.drop-tgt{background:#faf5ff;border:2px dashed var(--purple)}
-.fc2-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g400);margin-bottom:3px}
-.fc2-value{font-size:14px;font-weight:700;color:var(--g900)}
-.fc2-formula{font-size:10px;font-weight:500;color:var(--purple);margin-top:3px}
-.fc2-del{position:absolute;top:4px;right:4px;width:15px;height:15px;border-radius:50%;background:var(--red);color:white;border:none;font-size:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:var(--t)}
-.footer-cell:hover .fc2-del{opacity:1}
-.footer-empty{color:var(--g300);font-size:11px;display:flex;align-items:center;gap:4px}
-.footer-drop-slot{flex:0 0 120px;border:2px dashed var(--g200);border-radius:6px;margin:6px;display:flex;align-items:center;justify-content:center;color:var(--g300);font-size:11px;cursor:default;transition:var(--t)}
-.footer-drop-slot.drag-over{border-color:var(--purple);background:#faf5ff;color:var(--purple)}
+/* Two-panel layout: left palette grid + right data grid (mirrors body) */
+.ftr-layout{display:flex;align-items:stretch;min-height:160px}
+
+/* ── Left: field-type palette — 2-column tile grid ── */
+.ftr-palette{width:172px;flex-shrink:0;border-right:1px solid var(--g200);background:var(--g50);display:flex;flex-direction:column;padding:10px 10px 12px}
+.ftr-palette-title{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);padding:0 2px 7px;border-bottom:1px solid var(--g200);margin-bottom:8px;flex-shrink:0}
+.ftr-ft-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.ftr-ft{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:10px 4px 8px;border:1px solid var(--g200);border-radius:var(--r);background:var(--white);cursor:grab;transition:var(--t);user-select:none}
+.ftr-ft:hover{border-color:var(--purple);background:#faf5ff;box-shadow:var(--ssm)}
+.ftr-ft.is-dragging{opacity:.3}
+.ftr-ft-icon{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ftr-ft-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;text-align:center;line-height:1.2}
+
+/* ── Right: grid table (same structure as body grid) ── */
+.ftr-grid-wrap{flex:1;overflow-x:auto;display:flex;flex-direction:column}
+/* Column header row */
+.ftr-head{display:flex;align-items:stretch;background:var(--g50);border-bottom:2px solid var(--g200)}
+.ftr-rn-hd{width:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-right:1px solid var(--g200);font-size:10px;color:var(--g400);font-weight:600;text-transform:uppercase}
+.ftr-col-th{flex:1;min-width:90px;display:flex;align-items:center;gap:6px;padding:8px 10px;border-right:1px solid var(--g200);font-size:11px;font-weight:700;color:var(--g600);text-transform:uppercase;letter-spacing:.05em;cursor:pointer;transition:var(--t);position:relative;user-select:none}
+.ftr-col-th:hover{background:#faf5ff;color:var(--purple)}
+.ftr-col-th.sel{background:#faf5ff;color:var(--purple);border-bottom:2px solid var(--purple);margin-bottom:-2px}
+.ftr-col-th.col-drag-over{border-left:3px solid var(--purple);background:#faf5ff}
+.ftr-col-th .ftr-col-del{position:absolute;top:3px;right:3px;width:14px;height:14px;border-radius:50%;background:var(--red);color:white;border:none;font-size:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:var(--t)}
+.ftr-col-th:hover .ftr-col-del{opacity:1}
+.ftr-col-th .ftr-col-drag{color:var(--g300);font-size:10px;cursor:grab;opacity:0;margin-right:4px}
+.ftr-col-th:hover .ftr-col-drag{opacity:1}
+.ftr-col-th-add{padding:8px 14px;display:flex;align-items:center;gap:5px;font-size:11px;color:var(--g400);cursor:pointer;white-space:nowrap;transition:var(--t)}
+.ftr-col-th-add:hover{color:var(--purple);background:#faf5ff}
+/* Footer data rows */
+.ftr-rows{display:flex;flex-direction:column}
+.ftr-row{display:flex;align-items:stretch;border-bottom:1px solid var(--g100)}
+.ftr-row:hover{background:rgba(124,58,237,.012)}
+.ftr-rn{width:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-right:1px solid var(--g100);font-size:11px;color:var(--g400);background:var(--g50)}
+.ftr-cell{flex:1;min-width:90px;padding:0;border-right:1px solid var(--g100);min-height:48px;display:flex;align-items:stretch;transition:var(--t);cursor:pointer;position:relative}
+.ftr-cell:last-child{border-right:none}
+.ftr-cell.drop-tgt{background:#faf5ff;outline:2px dashed var(--purple);outline-offset:-2px}
+.ftr-cell.sel .ftr-cell-inner{background:rgba(124,58,237,.05);outline:2px solid var(--purple);outline-offset:-2px}
+/* Inner layout of a filled footer cell — label + value stacked */
+.ftr-cell-inner{flex:1;padding:6px 10px;display:flex;flex-direction:column;justify-content:center;gap:1px}
+.ftr-cell:hover .ftr-cell-inner{background:rgba(124,58,237,.04)}
+.fc2-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g400)}
+.fc2-value{font-size:13px;font-weight:700;color:var(--g900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fc2-formula{font-size:9px;font-weight:500;color:var(--purple);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fc2-del{position:absolute;top:3px;right:3px;width:14px;height:14px;border-radius:50%;background:var(--red);color:white;border:none;font-size:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:var(--t);z-index:2}
+.ftr-cell:hover .fc2-del{opacity:1}
+/* Empty cell drop hint */
+.ftr-cell-empty{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;color:var(--g300);font-size:11px}
+/* Add-row button (mirrors grid) */
+.ftr-add-row{display:flex;align-items:center;justify-content:center;gap:6px;padding:7px;color:var(--g400);font-size:12px;font-weight:500;cursor:pointer;border-top:1px dashed var(--g200);transition:var(--t)}
+.ftr-add-row:hover{background:var(--g50);color:var(--purple)}
+/* Empty state (no columns) */
+.ftr-drop-zone{border:2px dashed var(--g200);border-radius:var(--r);background:rgba(124,58,237,.02);min-height:80px;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--purple);font-size:12px;font-weight:500;transition:var(--t);margin:14px;cursor:default}
+.ftr-drop-zone.drag-over{border-color:var(--purple);background:#faf5ff}
 .footer-empty-state{padding:20px;text-align:center;color:var(--g400);font-size:12px}
 
 /* ─── PROPERTIES PANEL (unchanged from original) ──────────── */
@@ -513,6 +549,31 @@ let footerRows = [
 ];
 let selFcid = null;   // selected footer cell fcid
 
+/* ── Footer field-type palette (left panel) ── */
+const FOOTER_FIELD_TYPES = [
+  { ftid:'ftext',     label:'TEXT',      color:'#2563eb',
+    icon:`<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>` },
+  { ftid:'fnumeric',  label:'NUMERIC',   color:'#7c3aed',
+    icon:`<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>` },
+  { ftid:'fdimension',label:'DIMENSION', color:'#db2777',
+    icon:`<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 3H3v18h18V3z"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>` },
+  { ftid:'fdate',     label:'DATE',      color:'#059669',
+    icon:`<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>` },
+  { ftid:'fdatetime', label:'DATETIME',  color:'#0891b2',
+    icon:`<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="17" cy="17" r="3"/><polyline points="17 15.5 17 17 18 17"/></svg>` },
+  { ftid:'fcombo',    label:'COMBO',     color:'#d97706',
+    icon:`<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M16 12l-4 4-4-4"/></svg>` },
+  { ftid:'fimage',    label:'IMAGE',     color:'#64748b',
+    icon:`<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>` },
+];
+function gft(ftid){ return FOOTER_FIELD_TYPES.find(f=>f.ftid===ftid); }
+
+/* footer column/row state – mirrors gridCols/gridDataRows but footer-scoped */
+let ftrCols     = [];   /* { fcc, label, width, align, fieldType:ftid } */
+let ftrDataRows = [];   /* { frr, values:{ [fcc]: string } }            */
+let selFtrColCid  = null;
+let dragFtrColCid = null;
+
 /* ── Shared selection ─── */
 // selUid = header field uid selected (same as original)
 let selUid  = hdrSections[0].rows[0].cells[0].uid;
@@ -543,7 +604,6 @@ function renderComps(){
 
 function renderStrTree(){
   const allHdrFields = hdrSections.reduce((a,s)=>a+s.rows.reduce((b,r)=>b+r.cells.filter(Boolean).length,0),0);
-  const ftrFields    = footerRows.reduce((a,r)=>a+r.cells.length,0);
   document.getElementById('strTree').innerHTML = `
     <!-- Header -->
     <div class="str-zone">
@@ -587,17 +647,19 @@ function renderStrTree(){
       <div class="str-zone-hdr">
         <div class="str-zone-dot" style="background:#7c3aed"></div>
         <span class="str-zone-title">Footer</span>
-        <span class="str-zone-count">${ftrFields} fields</span>
-        <div class="str-zone-add" title="Add row" onclick="addFooterRow()">+</div>
+        <span class="str-zone-count">${ftrCols.length} cols · ${ftrDataRows.length} rows</span>
+        <div class="str-zone-add" title="Add column" onclick="addFtrCol()">+</div>
       </div>
       <div class="str-items">
-        ${footerRows.map((r,i)=>`
-          <div class="str-item">
-            <div class="str-item-dot" style="background:#7c3aed"></div>
-            <span style="flex:1">Summary Row ${i+1}</span>
-            <span style="color:var(--g400);font-size:10px;margin-right:4px">${r.cells.length} cells</span>
-          </div>`).join('')}
-        <div class="str-add-row" onclick="addFooterRow()">+ Add row</div>
+        ${ftrCols.map(c=>{
+          const ft=gft(c.fieldType);
+          return `<div class="str-item ${selFtrColCid===c.fcc?'active':''}" onclick="selectFtrCol('${c.fcc}')">
+            <div class="str-item-dot" style="background:${ft?ft.color:'#7c3aed'}"></div>
+            <span style="flex:1">${esc(c.label)}</span>
+            ${ft?`<span style="font-size:9px;color:var(--g400);margin-right:4px">${ft.label}</span>`:''}
+            <span class="str-item-del" onclick="delFtrCol('${c.fcc}',event)">✕</span>
+          </div>`;}).join('')}
+        <div class="str-add-row" onclick="addFtrCol()">+ Add column</div>
       </div>
     </div>`;
 }
@@ -1038,56 +1100,268 @@ function gridCellDrop(e, colCid, rowRid){
 ═══════════════════════════════════════════════════════════════ */
 const AGG_FNS = ['SUM','AVG','COUNT','MIN','MAX','CUSTOM'];
 
+/* ── renderFooter ─────────────────────────────────────────────
+   Two-panel layout:
+     LEFT  – draggable field-type palette (TEXT, NUMERIC, …)
+     RIGHT – grid table mirroring the body/grid structure
+──────────────────────────────────────────────────────────────── */
 function renderFooter(){
   const cont = document.getElementById('footerContent');
-  const total = footerRows.reduce((a,r)=>a+r.cells.length,0);
-  document.getElementById('ftrMeta').textContent = total + (total===1?' field':' fields');
 
-  if(footerRows.length===0){
-    cont.innerHTML = `
-      <div class="footer-empty-state">No summary rows yet.<br>Click <strong>+ Row</strong> to add aggregations.</div>`;
-    return;
-  }
+  /* meta counts: count ftrCols for column count, ftrDataRows for rows */
+  const colCount = ftrCols.length;
+  const rowCount = ftrDataRows.length;
+  document.getElementById('ftrMeta').textContent =
+    colCount + (colCount===1?' column':' columns') + ' · ' + rowCount + ' rows';
 
-  let html = `<div class="footer-wrap"><div class="footer-grid">`;
-  footerRows.forEach(row=>{
-    html += `<div class="footer-row">`;
-    row.cells.forEach(cell=>{
-      const refCol = gridCols.find(c=>c.cid===cell.refColCid);
-      const isSel  = selFcid===cell.fcid;
-      html += `
-        <div class="footer-cell ${isSel?'sel':''}" onclick="selectFtrCell('${cell.fcid}')">
-          <button class="fc2-del" onclick="delFtrCell('${row.frid}','${cell.fcid}',event)">✕</button>
-          <div class="fc2-label">${esc(cell.label)}</div>
-          <div class="fc2-value">${esc(cell.value)}</div>
-          <div class="fc2-formula">${cell.aggFn}${refCol?' · '+esc(refCol.label):''}</div>
+  /* ── LEFT: palette ── */
+  const paletteHtml = `
+    <div class="ftr-palette">
+      <div class="ftr-palette-title">Field Types</div>
+      <div class="ftr-ft-grid">
+        ${FOOTER_FIELD_TYPES.map(ft=>`
+          <div class="ftr-ft" draggable="true" data-ftid="${ft.ftid}"
+               ondragstart="ftrFtDragStart(event,'${ft.ftid}')"
+               ondragend="onDragEnd()">
+            <div class="ftr-ft-icon" style="background:${ft.color}20;color:${ft.color}">${ft.icon}</div>
+            <div class="ftr-ft-label" style="color:${ft.color}">${ft.label}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+
+  /* ── RIGHT: grid table ── */
+  let gridHtml = `<div class="ftr-grid-wrap">`;
+
+  if(ftrCols.length === 0){
+    gridHtml += `
+      <div class="ftr-drop-zone" id="ftrMainDrop">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>Drag a field type from the left panel, or click <strong>+ Column</strong> to start</span>
+      </div>`;
+  } else {
+    /* column header row */
+    gridHtml += `<div class="ftr-head"><div class="ftr-rn-hd">#</div>`;
+    ftrCols.forEach(col=>{
+      const ft   = gft(col.fieldType);
+      const isSel = selFtrColCid === col.fcc;
+      gridHtml += `
+        <div class="ftr-col-th${isSel?' sel':''}" data-fcc="${col.fcc}"
+             draggable="true"
+             ondragstart="ftrColDragStart(event,'${col.fcc}')"
+             ondragover="ftrColDragOver(event,'${col.fcc}')"
+             ondragleave="ftrColDragLeave(event,'${col.fcc}')"
+             ondrop="ftrColDrop(event,'${col.fcc}')"
+             ondragend="ftrColDragEnd()"
+             onclick="selectFtrCol('${col.fcc}')">
+          <span class="ftr-col-drag">${dots()}</span>
+          ${ft ? `<span style="width:7px;height:7px;border-radius:50%;background:${ft.color};flex-shrink:0;display:inline-block"></span>` : ''}
+          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(col.label)}</span>
+          <button class="ftr-col-del" onclick="delFtrCol('${col.fcc}',event)">✕</button>
         </div>`;
     });
-    /* drop slot to add more cells to this row */
-    html += `
-      <div class="footer-drop-slot"
-           ondragover="ftrDropOver(event,this)"
-           ondragleave="ftrDropLeave(event,this)"
-           ondrop="ftrDropCell(event,'${row.frid}')">
+    gridHtml += `<div class="ftr-col-th-add" onclick="addFtrCol()">+ Col</div></div>`;
+
+    /* data rows */
+    gridHtml += `<div class="ftr-rows">`;
+    ftrDataRows.forEach((row, ri)=>{
+      gridHtml += `<div class="ftr-row"><div class="ftr-rn">${ri+1}</div>`;
+      ftrCols.forEach(col=>{
+        const val   = row.values[col.fcc]||'';
+        const ft    = gft(col.fieldType);
+        const isSel = selFtrColCid===col.fcc;
+        gridHtml += `
+          <div class="ftr-cell${isSel?' sel':''}"
+               onclick="selectFtrCol('${col.fcc}')"
+               ondragover="ftrCellOver(event,this)"
+               ondragleave="ftrCellLeave(event,this)"
+               ondrop="ftrCellDrop(event,'${col.fcc}','${row.frr}')">
+            ${val
+              ? `<button class="fc2-del" onclick="clearFtrCell('${col.fcc}','${row.frr}',event)">✕</button>
+                 <div class="ftr-cell-inner">
+                   <div class="fc2-label">${esc(col.label)}</div>
+                   <div class="fc2-value">${esc(val)}</div>
+                   ${ft?`<div class="fc2-formula">${ft.label}</div>`:''}
+                 </div>`
+              : `<div class="ftr-cell-inner">
+                   <div class="ftr-cell-empty">
+                     <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                     —
+                   </div>
+                 </div>`}
+          </div>`;
+      });
+      gridHtml += `</div>`;
+    });
+    gridHtml += `</div>`;
+
+    /* add-row bar */
+    gridHtml += `
+      <div class="ftr-add-row" onclick="addFtrDataRow()">
         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        &nbsp;Drop field
+        Add Row
       </div>`;
-    html += `</div>`;
-  });
-  html += `</div></div>`;
-  cont.innerHTML = html;
+  }
+
+  gridHtml += `</div>`; /* /ftr-grid-wrap */
+
+  cont.innerHTML = `<div class="ftr-layout">${paletteHtml}${gridHtml}</div>`;
+
+  /* wire the empty-state drop zone after innerHTML is set */
+  const mdz = document.getElementById('ftrMainDrop');
+  if(mdz){
+    mdz.addEventListener('dragover',  e=>{ e.preventDefault(); mdz.classList.add('drag-over'); });
+    mdz.addEventListener('dragleave', ()=> mdz.classList.remove('drag-over'));
+    mdz.addEventListener('drop',      e=>{ e.preventDefault(); mdz.classList.remove('drag-over'); ftrDropNewCol(e); });
+  }
 }
 
-/* ── Footer actions ───────────────────────────────────────── */
+/* ── Footer field-type palette drag start ─────────────────── */
+function ftrFtDragStart(e, ftid){
+  dragSrc = { type:'ftr-ft', ftid };
+  e.dataTransfer.effectAllowed = 'copy';
+  setBlankDragImage(e);
+  const ft = gft(ftid);
+  showGhost(ft.label, ft.icon);
+  document.querySelector(`.ftr-ft[data-ftid="${ftid}"]`)?.classList.add('is-dragging');
+}
+
+/* ── Drop new column (empty-state zone) ───────────────────── */
+function ftrDropNewCol(e){
+  if(!dragSrc) return;
+  let label = 'New Column', fieldType = null;
+  if(dragSrc.type==='ftr-ft'){
+    const ft = gft(dragSrc.ftid);
+    label = ft.label; fieldType = dragSrc.ftid;
+  } else if(dragSrc.type==='comp'){
+    label = gc(dragSrc.compId)?.lbl || 'Column';
+  }
+  const newCol = { fcc:uid(), label, width:120, align:'left', fieldType };
+  ftrCols.push(newCol);
+  ftrDataRows.forEach(r=>r.values[newCol.fcc]='');
+  selFtrColCid=newCol.fcc; selZone='footer'; selUid=null; selColCid=null; selFcid=null;
+  renderFooter(); renderStrTree(); renderProps();
+  showToast(`Footer column "${label}" created`);
+}
+
+/* ── Footer column CRUD ───────────────────────────────────── */
+function addFtrCol(){
+  const label = prompt('Footer column label:', 'New Column');
+  if(!label) return;
+  const newCol = { fcc:uid(), label:label.trim(), width:120, align:'left', fieldType:null };
+  ftrCols.push(newCol);
+  ftrDataRows.forEach(r=>r.values[newCol.fcc]='');
+  selFtrColCid=newCol.fcc; selZone='footer'; selUid=null; selColCid=null; selFcid=null;
+  renderFooter(); renderStrTree(); renderProps();
+  showToast(`Footer column "${label}" added`);
+}
+
+function addFtrDataRow(){
+  const row = { frr:uid(), values:{} };
+  ftrCols.forEach(c=>row.values[c.fcc]='');
+  ftrDataRows.push(row);
+  renderFooter();
+  showToast('Footer row added');
+}
+
+function delFtrCol(fcc, e){
+  e && e.stopPropagation();
+  ftrCols = ftrCols.filter(c=>c.fcc!==fcc);
+  ftrDataRows.forEach(r=>delete r.values[fcc]);
+  if(selFtrColCid===fcc){ selFtrColCid=null; }
+  renderFooter(); renderStrTree(); renderProps();
+  showToast('Footer column removed');
+}
+
+function selectFtrCol(fcc){
+  selFtrColCid=fcc; selZone='footer-col'; selUid=null; selColCid=null; selFcid=null;
+  renderFooter(); renderProps();
+}
+
+function clearFtrCell(fcc, frr, e){
+  e && e.stopPropagation();
+  const row = ftrDataRows.find(r=>r.frr===frr); if(!row) return;
+  row.values[fcc]='';
+  renderFooter();
+}
+
+/* ── Footer column drag-reorder ───────────────────────────── */
+function ftrColDragStart(e, fcc){
+  dragFtrColCid = fcc;
+  e.dataTransfer.effectAllowed = 'move';
+  setBlankDragImage(e);
+}
+function ftrColDragOver(e, fcc){
+  if(dragSrc?.type==='ftr-ft'){ e.preventDefault(); return; } /* also allow palette drops onto th */
+  if(!dragFtrColCid || dragFtrColCid===fcc) return;
+  e.preventDefault(); e.stopPropagation();
+  document.querySelectorAll('.ftr-col-th').forEach(el=>el.classList.toggle('col-drag-over', el.dataset.fcc===fcc));
+}
+function ftrColDragLeave(e, fcc){
+  document.querySelector(`.ftr-col-th[data-fcc="${fcc}"]`)?.classList.remove('col-drag-over');
+}
+function ftrColDrop(e, toFcc){
+  e.preventDefault(); e.stopPropagation();
+  document.querySelectorAll('.ftr-col-th').forEach(el=>el.classList.remove('col-drag-over'));
+  /* palette ft dropped onto an existing column → assign field type */
+  if(dragSrc?.type==='ftr-ft'){
+    const col = ftrCols.find(c=>c.fcc===toFcc); if(!col) return;
+    const ft  = gft(dragSrc.ftid);
+    col.fieldType = dragSrc.ftid;
+    col.label     = col.label===col.fieldType||col.label==='New Column' ? ft.label : col.label;
+    dragFtrColCid=null; renderFooter(); renderProps();
+    showToast(`Field type set to ${ft.label}`);
+    return;
+  }
+  /* reorder */
+  if(!dragFtrColCid || dragFtrColCid===toFcc){ dragFtrColCid=null; return; }
+  const fi = ftrCols.findIndex(c=>c.fcc===dragFtrColCid);
+  const ti = ftrCols.findIndex(c=>c.fcc===toFcc);
+  const [col] = ftrCols.splice(fi,1);
+  ftrCols.splice(ti,0,col);
+  dragFtrColCid=null;
+  renderFooter();
+  showToast('Footer column reordered');
+}
+function ftrColDragEnd(){
+  dragFtrColCid=null;
+  document.querySelectorAll('.ftr-col-th').forEach(el=>el.classList.remove('col-drag-over'));
+}
+
+/* ── Footer cell drag-drop ────────────────────────────────── */
+function ftrCellOver(e, el){ e.preventDefault(); el.classList.add('drop-tgt'); }
+function ftrCellLeave(e, el){ el.classList.remove('drop-tgt'); }
+function ftrCellDrop(e, fcc, frr){
+  e.preventDefault(); e.target.closest('.ftr-cell')?.classList.remove('drop-tgt');
+  if(!dragSrc) return;
+  const col = ftrCols.find(c=>c.fcc===fcc); if(!col) return;
+  const row = ftrDataRows.find(r=>r.frr===frr); if(!row) return;
+
+  if(dragSrc.type==='ftr-ft'){
+    /* assign field type to column + place sample value */
+    const ft = gft(dragSrc.ftid);
+    col.fieldType = dragSrc.ftid;
+    const samples = {ftext:'Sample text',fnumeric:'0.00',fdimension:'100 px',fdate:'DD/MM/YYYY',fdatetime:'DD/MM/YYYY HH:MM',fcombo:'Option A',fimage:'image.png'};
+    row.values[fcc] = samples[dragSrc.ftid]||ft.label;
+    selFtrColCid=fcc; selZone='footer-col'; selUid=null; selColCid=null; selFcid=null;
+    renderFooter(); renderProps();
+    showToast(`"${ft.label}" placed in footer`);
+  } else if(dragSrc.type==='comp'){
+    /* body component dropped into footer cell */
+    const comp = gc(dragSrc.compId);
+    row.values[fcc] = comp.ph||comp.lbl;
+    selFtrColCid=fcc; selZone='footer-col'; selUid=null; selColCid=null; selFcid=null;
+    renderFooter(); renderProps();
+    showToast(`"${comp.name}" placed in footer`);
+  }
+}
+
+/* ── Legacy footer row/cell actions (kept intact for state compat) ── */
 function addFooterRow(){
-  /* create one default cell if we have grid columns */
-  const cells = gridCols.length ? [{
-    fcid:uid(), label:'Total', aggFn:'SUM',
-    refColCid: gridCols[gridCols.length-1].cid, value:'0'
-  }] : [];
-  footerRows.push({ frid:rid(), cells });
-  renderFooter(); renderStrTree();
-  showToast('Summary row added');
+  /* "add row" button in zone bar – creates a new ftrDataRow */
+  if(ftrCols.length===0){
+    showToast('Add at least one footer column first'); return;
+  }
+  addFtrDataRow();
 }
 
 function selectFtrCell(fcid){
@@ -1112,7 +1386,6 @@ function ftrDropCell(e, frid){
   if(!dragSrc || dragSrc.type!=='comp') return;
   const comp = gc(dragSrc.compId);
   const row  = footerRows.find(r=>r.frid===frid); if(!row) return;
-  /* find best matching column */
   const matchCol = gridCols.find(c=>c.field?.compId===comp.id);
   const defaultAgg = ['numeric','currency','formula'].includes(comp.id) ? 'SUM' : 'COUNT';
   const newCell = {
@@ -1190,7 +1463,37 @@ function renderProps(){
     return;
   }
 
-  /* ── Footer cell selected ── */
+  /* ── Footer column selected ── */
+  if(selZone==='footer-col' && selFtrColCid){
+    const col = ftrCols.find(c=>c.fcc===selFtrColCid);
+    if(!col){ hideProps(); return; }
+    const ft = gft(col.fieldType);
+    showProps('FTR COL','#7c3aed',`
+      <div class="pg"><div class="pl">Column Label</div>
+        <input class="pi" value="${esc(col.label)}" oninput="updFtrColProp('label',this.value)"/></div>
+      <div class="pg"><div class="pl">Field Type</div>
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--g200);border-radius:var(--rsm);background:var(--g50)">
+          ${ft
+            ? `<span style="width:8px;height:8px;border-radius:50%;background:${ft.color};flex-shrink:0"></span>
+               <span style="font-size:13px;font-weight:600;flex:1">${ft.label}</span>`
+            : `<span style="font-size:12px;color:var(--g400);flex:1">None assigned</span>`}
+        </div>
+        <select class="pi-sel" style="margin-top:4px" onchange="updFtrColProp('fieldType',this.value)">
+          <option value="">— none —</option>
+          ${FOOTER_FIELD_TYPES.map(f=>`<option value="${f.ftid}" ${col.fieldType===f.ftid?'selected':''}>${f.label}</option>`).join('')}
+        </select></div>
+      <div class="pg"><div class="pl">Width (px)</div>
+        <input class="pi" type="number" value="${col.width}" oninput="updFtrColProp('width',+this.value)"/></div>
+      <div class="pg"><div class="pl">Alignment</div>
+        <div class="pp-seg">
+          ${['left','center','right'].map(a=>`
+            <div class="pp-seg-btn ${col.align===a?'active':''}" onclick="updFtrColProp('align','${a}')">${a[0].toUpperCase()+a.slice(1)}</div>`).join('')}
+        </div></div>
+    `);
+    return;
+  }
+
+  /* ── Footer cell selected (legacy) ── */
   if(selZone==='footer' && selFcid){
     let cell = null;
     for(const row of footerRows) cell = cell || row.cells.find(c=>c.fcid===selFcid);
@@ -1256,6 +1559,9 @@ function updColFieldProp(k,v){
 function updFtrProp(k,v){
   for(const row of footerRows){ const c=row.cells.find(c=>c.fcid===selFcid); if(c){ c[k]=v; renderFooter(); renderProps(); return; } }
 }
+function updFtrColProp(k,v){
+  const col=ftrCols.find(c=>c.fcc===selFtrColCid); if(!col)return; col[k]=v; renderFooter(); renderProps();
+}
 function togAdv(){
   advOpen=!advOpen;
   document.getElementById('advDiv')?.classList.toggle('open',advOpen);
@@ -1286,10 +1592,11 @@ function fDragStart(e, u, fromSecId, fromRow, fromCol){
 }
 
 function onDragEnd(){
-  dragSrc = null; hideGhost();
+  dragSrc = null; dragFtrColCid = null; hideGhost();
   document.querySelectorAll('.is-dragging,.field-dragging').forEach(el=>el.classList.remove('is-dragging','field-dragging'));
   document.querySelectorAll('.drag-over,.drop-tgt').forEach(el=>el.classList.remove('drag-over','drop-tgt'));
   document.querySelectorAll('.row-drop-ind.active').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.ftr-col-th.col-drag-over').forEach(el=>el.classList.remove('col-drag-over'));
 }
 
 /* ── global dragover: ghost + row indicators ─────────────── */
