@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>FormFlow – Customer Intake Form</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>FormFlow – Layout Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --blue:#2563eb;--blue-light:#eff4ff;--blue-mid:#bfcffb;
-  --red:#ef4444;
+  --red:#ef4444;--green:#059669;--amber:#d97706;--purple:#7c3aed;--pink:#db2777;
   --g50:#f8fafc;--g100:#f1f5f9;--g200:#e2e8f0;--g300:#cbd5e1;
   --g400:#94a3b8;--g500:#64748b;--g600:#475569;--g700:#334155;
   --g800:#1e293b;--g900:#0f172a;--white:#fff;
@@ -17,9 +17,11 @@
   --ssm:0 1px 3px rgba(0,0,0,.08);--s:0 4px 16px rgba(0,0,0,.10);--slg:0 8px 32px rgba(0,0,0,.16);
   --f:'DM Sans',sans-serif;--t:.16s ease;
 }
+
+/* ─── RESET / BASE ─────────────────────────────────────────── */
 body{font-family:var(--f);background:var(--g50);color:var(--g900);height:100vh;display:flex;flex-direction:column;overflow:hidden;font-size:14px}
 
-/* TOPBAR */
+/* ─── TOPBAR ───────────────────────────────────────────────── */
 .topbar{height:52px;background:var(--white);border-bottom:1px solid var(--g200);display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0;z-index:200}
 .t-logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px}
 .t-bc{display:flex;align-items:center;gap:6px;color:var(--g500);font-size:13px}
@@ -32,19 +34,28 @@ body{font-family:var(--f);background:var(--g50);color:var(--g900);height:100vh;d
 .btn-pub:hover{background:#1d4ed8}
 .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#f59e0b);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:white}
 
-/* WORKSPACE */
-.workspace{flex:1;display:grid;grid-template-columns:52px 240px 1fr 268px;overflow:hidden}
+/* ─── WORKSPACE ────────────────────────────────────────────── */
+.workspace{flex:1;display:grid;grid-template-columns:52px 244px 1fr 272px;overflow:hidden}
 
-/* COL1 RAIL */
+/* ─── RAIL ─────────────────────────────────────────────────── */
 .col-rail{background:var(--white);border-right:1px solid var(--g200);display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:6px}
 .ri{width:36px;height:36px;border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;color:var(--g500);cursor:pointer;transition:var(--t)}
 .ri:hover{background:var(--blue-light);color:var(--blue)}
 .ri.active{background:var(--blue);color:white}
 .rsp{flex:1}
 
-/* COL2 COMPONENTS */
+/* ─── SIDEBAR ──────────────────────────────────────────────── */
 .col-comp{background:var(--white);border-right:1px solid var(--g200);display:flex;flex-direction:column;overflow:hidden}
-.comp-hdr{padding:18px 16px 10px;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--g400);text-transform:uppercase}
+/* Two-tab header */
+.sb-tabs{display:flex;border-bottom:1px solid var(--g200);flex-shrink:0}
+.sb-tab{flex:1;padding:11px 6px;text-align:center;font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--g400);cursor:pointer;border-bottom:2px solid transparent;transition:var(--t)}
+.sb-tab:hover{color:var(--g700)}
+.sb-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+/* Panels inside sidebar */
+.sb-panel{display:none;flex-direction:column;flex:1;overflow:hidden}
+.sb-panel.active{display:flex}
+/* Components panel (original style) */
+.comp-hdr{padding:14px 14px 8px;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--g400);text-transform:uppercase;flex-shrink:0}
 .comp-list{padding:6px 10px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:6px}
 .comp-item{display:flex;align-items:center;gap:12px;padding:11px 12px;border:1px solid var(--g200);border-radius:var(--r);background:var(--white);cursor:grab;transition:var(--t);user-select:none}
 .comp-item:hover{border-color:var(--blue-mid);background:var(--blue-light);box-shadow:var(--ssm)}
@@ -52,16 +63,67 @@ body{font-family:var(--f);background:var(--g50);color:var(--g900);height:100vh;d
 .ci{width:34px;height:34px;border-radius:var(--rsm);background:var(--g100);display:flex;align-items:center;justify-content:center;color:var(--g600);flex-shrink:0}
 .cn{font-size:13px;font-weight:600;color:var(--g800)}
 .cd{font-size:11px;color:var(--g400);margin-top:1px}
+/* Structure tree panel */
+.str-tree{padding:8px 10px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:6px}
+.str-zone{border:1px solid var(--g200);border-radius:var(--r);overflow:hidden}
+.str-zone-hdr{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--g50);cursor:pointer}
+.str-zone-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.str-zone-title{font-size:12px;font-weight:700;color:var(--g800);flex:1}
+.str-zone-count{font-size:10px;color:var(--g400)}
+.str-zone-add{margin-left:4px;width:18px;height:18px;border:1px dashed var(--g300);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--g400);cursor:pointer;transition:var(--t);line-height:1}
+.str-zone-add:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-light)}
+.str-items{padding:4px 8px 6px;display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--g100)}
+.str-item{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;font-size:11px;font-weight:500;color:var(--g600);cursor:pointer;transition:var(--t)}
+.str-item:hover{background:var(--blue-light);color:var(--blue)}
+.str-item.active{background:var(--blue-light);color:var(--blue);font-weight:600}
+.str-item-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.str-item-del{margin-left:auto;font-size:10px;opacity:0;transition:var(--t)}
+.str-item:hover .str-item-del{opacity:1}
+.str-add-row{display:flex;align-items:center;gap:4px;padding:5px 8px;color:var(--g400);font-size:11px;cursor:pointer;border:1px dashed var(--g200);border-radius:6px;transition:var(--t)}
+.str-add-row:hover{border-color:var(--blue-mid);color:var(--blue);background:var(--blue-light)}
 
-/* COL3 CANVAS */
-.col-canvas{background:var(--g50);overflow-y:auto;padding:32px 36px;background-image:radial-gradient(var(--g300) 1px,transparent 1px);background-size:22px 22px}
-.cv-card{background:var(--white);border:1px solid var(--g200);border-radius:var(--rlg);box-shadow:var(--s);min-height:520px}
-.cv-hdr{padding:26px 28px 18px;border-bottom:1px solid var(--g100)}
-.cv-title{font-size:22px;font-weight:700;color:var(--g900)}
-.cv-sub{font-size:13.5px;color:var(--g500);margin-top:4px}
-.cv-body{padding:16px 20px 24px;display:flex;flex-direction:column;gap:0}
+/* ─── CANVAS ───────────────────────────────────────────────── */
+.col-canvas{background:var(--g50);overflow-y:auto;padding:28px 32px;background-image:radial-gradient(var(--g300) 1px,transparent 1px);background-size:22px 22px}
+.cv-card{background:var(--white);border:1px solid var(--g200);border-radius:var(--rlg);box-shadow:var(--s);min-height:600px;overflow:hidden}
 
-/* FORM ROW */
+/* Card title bar */
+.cv-hdr{padding:22px 26px 16px;border-bottom:1px solid var(--g100);display:flex;align-items:center;gap:12px}
+.cv-title{font-size:20px;font-weight:700;color:var(--g900);flex:1;outline:none}
+.cv-status{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#dcfce7;color:#166534}
+
+/* ─── LAYOUT ZONE WRAPPER ──────────────────────────────────── */
+/* Each zone (Header / Body / Footer) has this container */
+.lz{border-top:1px solid var(--g200)}
+.lz:first-of-type{border-top:none}
+
+/* Zone collapse bar */
+.lz-bar{display:flex;align-items:center;gap:10px;padding:9px 20px;background:var(--g50);cursor:pointer;user-select:none;border-bottom:1px solid var(--g200);transition:var(--t)}
+.lz-bar:hover{background:var(--g100)}
+.lz-badge{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:white;flex-shrink:0;letter-spacing:0}
+.lz-name{font-size:12px;font-weight:700;color:var(--g700);flex:1}
+.lz-meta{font-size:11px;color:var(--g400)}
+.lz-actions{display:flex;gap:5px}
+.lz-btn{padding:3px 9px;border:1px solid var(--g200);border-radius:4px;background:var(--white);color:var(--g500);font-family:var(--f);font-size:11px;font-weight:500;cursor:pointer;transition:var(--t)}
+.lz-btn:hover{border-color:var(--blue-mid);color:var(--blue);background:var(--blue-light)}
+.lz-chevron{color:var(--g400);transition:transform .2s}
+.lz-bar.collapsed .lz-chevron{transform:rotate(-90deg)}
+.lz-body{overflow:hidden}
+.lz-bar.collapsed+.lz-body{display:none}
+
+/* ─── HEADER ZONE: sub-sections as tabs ────────────────────── */
+.hz-tabs{display:flex;align-items:center;gap:0;border-bottom:1px solid var(--g200);background:var(--white);padding:0 20px}
+.hz-tab{padding:9px 15px;font-size:13px;font-weight:500;color:var(--g500);cursor:pointer;border-bottom:2px solid transparent;transition:var(--t);white-space:nowrap;position:relative}
+.hz-tab:hover{color:var(--g800)}
+.hz-tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+.hz-tab .tab-del{display:none;position:absolute;top:4px;right:2px;width:13px;height:13px;border-radius:50%;background:var(--red);color:white;font-size:8px;align-items:center;justify-content:center;cursor:pointer;line-height:1}
+.hz-tab:hover .tab-del{display:flex}
+.hz-tab-add{padding:8px 10px;color:var(--g400);cursor:pointer;font-size:16px;line-height:1;transition:var(--t)}
+.hz-tab-add:hover{color:var(--blue)}
+/* Section content (fields) */
+.hz-sec{display:none;padding:14px 20px 6px}
+.hz-sec.active{display:block}
+
+/* ─── ORIGINAL FORM-ROW / CELL / CARD (unchanged from original) */
 .form-row{display:flex;flex-direction:column;margin-bottom:10px;position:relative}
 .row-tb{display:flex;align-items:center;gap:6px;margin-bottom:5px;opacity:0;transition:var(--t);min-height:22px}
 .form-row:hover .row-tb{opacity:1}
@@ -73,14 +135,10 @@ body{font-family:var(--f);background:var(--g50);color:var(--g900);height:100vh;d
 .row-inner{display:grid;gap:10px;position:relative}
 .row-drop-ind{height:3px;border-radius:2px;background:var(--blue);margin-bottom:8px;opacity:0;transition:opacity .1s;pointer-events:none}
 .row-drop-ind.active{opacity:1}
-
-/* CELL */
 .field-cell{position:relative;min-height:92px}
 .cell-empty-tgt{position:absolute;inset:0;border:2px dashed var(--blue-mid);border-radius:var(--r);background:rgba(37,99,235,.03);display:flex;align-items:center;justify-content:center;color:var(--g400);font-size:12px;font-weight:500;transition:var(--t);pointer-events:none;opacity:0}
 .field-cell.is-empty .cell-empty-tgt{opacity:1;pointer-events:all}
 .field-cell.drag-over .cell-empty-tgt{border-color:var(--blue);background:var(--blue-light);color:var(--blue);opacity:1}
-
-/* FIELD CARD */
 .field-card{border:2px solid transparent;border-radius:var(--r);background:var(--white);padding:14px 14px 10px;cursor:pointer;transition:var(--t);position:relative;user-select:none}
 .field-card:hover{border-color:var(--blue-mid)}
 .field-card.selected{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.08)}
@@ -93,13 +151,71 @@ body{font-family:var(--f);background:var(--g50);color:var(--g900);height:100vh;d
 .fc-del{position:absolute;top:-9px;right:-9px;width:24px;height:24px;border-radius:50%;background:var(--red);border:none;color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:var(--t);font-size:11px;z-index:10}
 .field-card:hover .fc-del,.field-card.selected .fc-del{opacity:1}
 .fc-del:hover{background:#dc2626;transform:scale(1.12)}
+/* Section drop zone */
+.sec-drop-zone{border:2px dashed var(--blue-mid);border-radius:var(--r);background:rgba(37,99,235,.02);min-height:72px;margin-top:4px;margin-bottom:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--blue);font-size:12px;font-weight:500;transition:var(--t)}
+.sec-drop-zone.drag-over,.sec-drop-zone:hover{border-color:var(--blue);background:var(--blue-light);box-shadow:0 0 0 3px rgba(37,99,235,.07)}
+.drop-plus{width:26px;height:26px;border-radius:50%;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:300}
 
-/* ADD ROW ZONE */
-.add-row-zone{border:2px dashed var(--blue-mid);border-radius:var(--r);background:rgba(37,99,235,.02);min-height:88px;margin-top:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:var(--blue);font-size:13px;font-weight:500;transition:var(--t);cursor:default}
-.add-row-zone.drag-over,.add-row-zone:hover{border-color:var(--blue);background:var(--blue-light);box-shadow:0 0 0 3px rgba(37,99,235,.07)}
-.drop-plus{width:28px;height:28px;border-radius:50%;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:300}
+/* ─── GRID / BODY ZONE ─────────────────────────────────────── */
+.grid-wrap{padding:0;overflow-x:auto}
+.grid-outer{min-width:100%;display:flex;flex-direction:column}
+/* column header row */
+.grid-head{display:flex;align-items:stretch;background:var(--g50);border-bottom:2px solid var(--g200);position:sticky;top:0;z-index:10}
+.grid-rn-hd{width:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-right:1px solid var(--g200);font-size:10px;color:var(--g400);font-weight:600;text-transform:uppercase}
+.grid-col-th{flex:1;min-width:90px;display:flex;align-items:center;gap:6px;padding:8px 10px;border-right:1px solid var(--g200);font-size:11px;font-weight:700;color:var(--g600);text-transform:uppercase;letter-spacing:.05em;cursor:pointer;transition:var(--t);position:relative;user-select:none}
+.grid-col-th:hover{background:var(--blue-light);color:var(--blue)}
+.grid-col-th.sel{background:var(--blue-light);color:var(--blue);border-bottom:2px solid var(--blue);margin-bottom:-2px}
+.grid-col-th.col-drag-over{border-left:3px solid var(--blue);background:var(--blue-light)}
+.grid-col-th .col-th-del{position:absolute;top:3px;right:3px;width:14px;height:14px;border-radius:50%;background:var(--red);color:white;border:none;font-size:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:var(--t)}
+.grid-col-th:hover .col-th-del{opacity:1}
+.grid-col-th .col-th-drag{color:var(--g300);font-size:10px;cursor:grab;opacity:0;margin-right:4px}
+.grid-col-th:hover .col-th-drag{opacity:1}
+.grid-col-th-add{padding:8px 14px;display:flex;align-items:center;gap:5px;font-size:11px;color:var(--g400);cursor:pointer;white-space:nowrap;transition:var(--t);border-right:none}
+.grid-col-th-add:hover{color:var(--blue);background:var(--blue-light)}
+/* grid data rows */
+.grid-rows{display:flex;flex-direction:column}
+.grid-row{display:flex;align-items:stretch;border-bottom:1px solid var(--g100)}
+.grid-row:hover{background:rgba(37,99,235,.015)}
+.grid-rn{width:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-right:1px solid var(--g100);font-size:11px;color:var(--g400);background:var(--g50)}
+.grid-cell{flex:1;min-width:90px;padding:7px 10px;border-right:1px solid var(--g100);min-height:36px;display:flex;align-items:center;font-size:12px;color:var(--g700);transition:var(--t);cursor:pointer;position:relative}
+.grid-cell:hover,.grid-cell.sel{background:rgba(37,99,235,.04)}
+.grid-cell.drop-tgt{background:var(--blue-light);border:2px dashed var(--blue-mid)}
+/* A field "chip" inside a grid cell header slot */
+.gc-chip{display:flex;align-items:center;gap:5px;width:100%}
+.gc-chip-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.gc-chip-name{flex:1;min-width:0;font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gc-chip-del{position:absolute;top:3px;right:3px;width:14px;height:14px;border-radius:50%;background:var(--red);color:white;border:none;font-size:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:var(--t)}
+.grid-cell:hover .gc-chip-del{opacity:1}
+.gc-empty-hint{color:var(--g300);font-size:11px;display:flex;align-items:center;gap:4px}
+/* grid add-row button */
+.grid-add-row{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;color:var(--g400);font-size:12px;font-weight:500;cursor:pointer;border-top:1px dashed var(--g200);transition:var(--t)}
+.grid-add-row:hover{background:var(--g50);color:var(--blue)}
+/* grid empty state */
+.grid-empty{padding:32px;text-align:center;color:var(--g400);font-size:13px}
+.grid-drop-zone{border:2px dashed var(--blue-mid);border-radius:var(--r);background:rgba(37,99,235,.02);min-height:80px;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--blue);font-size:12px;font-weight:500;transition:var(--t);margin:16px 20px;cursor:default}
+.grid-drop-zone.drag-over{border-color:var(--blue);background:var(--blue-light)}
 
-/* COL4 PROPS */
+/* ─── FOOTER ZONE ──────────────────────────────────────────── */
+.footer-wrap{padding:14px 20px 20px}
+.footer-grid{border:1px solid var(--g200);border-radius:var(--r);overflow:hidden}
+.footer-row{display:flex;align-items:stretch;border-bottom:1px solid var(--g100)}
+.footer-row:last-child{border-bottom:none}
+.footer-cell{flex:1;min-width:110px;padding:10px 14px;border-right:1px solid var(--g100);display:flex;flex-direction:column;justify-content:center;cursor:pointer;transition:var(--t);position:relative}
+.footer-cell:last-child{border-right:none}
+.footer-cell:hover{background:var(--blue-light)}
+.footer-cell.sel{background:rgba(124,58,237,.05);border:2px solid var(--purple)}
+.footer-cell.drop-tgt{background:#faf5ff;border:2px dashed var(--purple)}
+.fc2-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g400);margin-bottom:3px}
+.fc2-value{font-size:14px;font-weight:700;color:var(--g900)}
+.fc2-formula{font-size:10px;font-weight:500;color:var(--purple);margin-top:3px}
+.fc2-del{position:absolute;top:4px;right:4px;width:15px;height:15px;border-radius:50%;background:var(--red);color:white;border:none;font-size:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:var(--t)}
+.footer-cell:hover .fc2-del{opacity:1}
+.footer-empty{color:var(--g300);font-size:11px;display:flex;align-items:center;gap:4px}
+.footer-drop-slot{flex:0 0 120px;border:2px dashed var(--g200);border-radius:6px;margin:6px;display:flex;align-items:center;justify-content:center;color:var(--g300);font-size:11px;cursor:default;transition:var(--t)}
+.footer-drop-slot.drag-over{border-color:var(--purple);background:#faf5ff;color:var(--purple)}
+.footer-empty-state{padding:20px;text-align:center;color:var(--g400);font-size:12px}
+
+/* ─── PROPERTIES PANEL (unchanged from original) ──────────── */
 .col-props{background:var(--white);border-left:1px solid var(--g200);display:flex;flex-direction:column;overflow:hidden}
 .ph{padding:15px 18px 12px;border-bottom:1px solid var(--g100);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .pt{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400)}
@@ -111,6 +227,8 @@ body{font-family:var(--f);background:var(--g50);color:var(--g900);height:100vh;d
 .pl{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g400)}
 .pi{width:100%;padding:8px 11px;border:1px solid var(--g200);border-radius:var(--rsm);font-family:var(--f);font-size:13px;color:var(--g900);background:var(--white);outline:none;transition:var(--t)}
 .pi:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.pi-sel{width:100%;padding:8px 11px;border:1px solid var(--g200);border-radius:var(--rsm);font-family:var(--f);font-size:13px;color:var(--g900);background:var(--white);outline:none;cursor:pointer}
+.pi-sel:focus{border-color:var(--blue)}
 .ptr{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border:1px solid var(--g200);border-radius:var(--r)}
 .ptl2{font-size:13px;font-weight:600;color:var(--g800)}
 .pts{font-size:11px;color:var(--g400);margin-top:1px}
@@ -132,11 +250,15 @@ body{font-family:var(--f);background:var(--g50);color:var(--g900);height:100vh;d
 .btn-rst:hover{background:var(--g100)}
 .btn-apl{flex:1;padding:9px;border:none;border-radius:var(--rsm);background:var(--blue);font-family:var(--f);font-size:13px;font-weight:600;color:white;cursor:pointer;transition:var(--t)}
 .btn-apl:hover{background:#1d4ed8}
+/* Extra props blocks */
+.pp-seg{display:flex;gap:4px}
+.pp-seg-btn{flex:1;padding:6px 4px;text-align:center;border:1px solid var(--g200);border-radius:4px;font-size:11px;font-weight:500;color:var(--g600);cursor:pointer;transition:var(--t)}
+.pp-seg-btn:hover{border-color:var(--blue-mid);color:var(--blue);background:var(--blue-light)}
+.pp-seg-btn.active{border-color:var(--blue);background:var(--blue-light);color:var(--blue);font-weight:700}
+.pp-divider{height:1px;background:var(--g100);margin:4px 0}
 
-/* GHOST */
+/* ─── GHOST ────────────────────────────────────────────────── */
 .ghost{position:fixed;pointer-events:none;opacity:.9;z-index:9999;padding:9px 14px;background:var(--white);border:1.5px solid var(--blue);border-radius:var(--r);box-shadow:var(--slg);font-size:13px;font-weight:600;color:var(--blue);display:none;align-items:center;gap:8px;transform:rotate(2deg)}
-
-/* TOAST */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--g900);color:white;padding:9px 18px;border-radius:var(--r);font-size:13px;font-weight:500;opacity:0;transition:.28s ease;z-index:9999;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--g200);border-radius:99px}
@@ -144,7 +266,7 @@ body{font-family:var(--f);background:var(--g50);color:var(--g900);height:100vh;d
 </head>
 <body>
 
-<!-- TOPBAR -->
+<!-- ── TOPBAR ─────────────────────────────────────────────── -->
 <header class="topbar">
   <div class="t-logo">
     <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
@@ -157,18 +279,20 @@ body{font-family:var(--f);background:var(--g50);color:var(--g900);height:100vh;d
   <div class="t-bc">
     <span style="color:var(--g500)">My Projects</span>
     <span class="t-sep">›</span>
-    <span>Customer Intake Form</span>
+    <span>Sales Invoice</span>
   </div>
   <div class="t-sp"></div>
   <button class="btn-prev" onclick="showToast('Preview mode coming soon')">
-    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Preview
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    Preview
   </button>
   <button class="btn-pub" onclick="showToast('Form published! 🎉')">Publish</button>
   <div class="avatar">JD</div>
 </header>
 
 <div class="workspace">
-  <!-- RAIL -->
+
+  <!-- ── RAIL ────────────────────────────────────────────── -->
   <nav class="col-rail">
     <div class="ri active">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
@@ -181,38 +305,94 @@ body{font-family:var(--f);background:var(--g50);color:var(--g900);height:100vh;d
     <div class="ri"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
   </nav>
 
-  <!-- COMPONENTS -->
+  <!-- ── SIDEBAR ──────────────────────────────────────────── -->
   <aside class="col-comp">
-    <div class="comp-hdr">Components</div>
-    <div class="comp-list" id="compList"></div>
+    <div class="sb-tabs">
+      <div class="sb-tab active" id="sbTabComp" onclick="switchSbTab('comp')">Components</div>
+      <div class="sb-tab" id="sbTabStr" onclick="switchSbTab('str')">Structure</div>
+    </div>
+    <!-- Components panel -->
+    <div class="sb-panel active" id="sbPanelComp">
+      <div class="comp-hdr">Form Elements</div>
+      <div class="comp-list" id="compList"></div>
+    </div>
+    <!-- Structure tree panel -->
+    <div class="sb-panel" id="sbPanelStr">
+      <div class="str-tree" id="strTree"></div>
+    </div>
   </aside>
 
-  <!-- CANVAS -->
+  <!-- ── CANVAS ──────────────────────────────────────────── -->
   <main class="col-canvas">
     <div class="cv-card">
+
+      <!-- card title -->
       <div class="cv-hdr">
-        <div class="cv-title">Customer Intake Form</div>
-        <div class="cv-sub">Please provide the details below to initialize your account.</div>
+        <div class="cv-title" contenteditable="true" spellcheck="false">Sales Invoice</div>
+        <div class="cv-status">Posted</div>
       </div>
-      <div class="cv-body" id="formBody">
-        <div class="add-row-zone" id="addRowZone">
-          <div class="drop-plus">+</div>
-          <span>Drop elements here</span>
+
+      <!-- ═══════════ HEADER ZONE ═══════════ -->
+      <div class="lz" id="zoneHeader">
+        <div class="lz-bar" onclick="toggleZone('zoneHeader',this)">
+          <div class="lz-badge" style="background:#2563eb">H</div>
+          <span class="lz-name">Header</span>
+          <span class="lz-meta" id="hdrMeta">0 sections</span>
+          <div class="lz-actions" onclick="event.stopPropagation()">
+            <button class="lz-btn" onclick="addHdrSection()">+ Section</button>
+          </div>
+          <svg class="lz-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="lz-body">
+          <!-- section tabs -->
+          <div class="hz-tabs" id="hdrTabs"></div>
+          <!-- section contents (rows + fields) -->
+          <div id="hdrSections"></div>
         </div>
       </div>
-    </div>
+
+      <!-- ═══════════ BODY / GRID ZONE ═══════════ -->
+      <div class="lz" id="zoneBody">
+        <div class="lz-bar" onclick="toggleZone('zoneBody',this)">
+          <div class="lz-badge" style="background:#059669">B</div>
+          <span class="lz-name">Body / Grid</span>
+          <span class="lz-meta" id="bodyMeta">0 columns</span>
+          <div class="lz-actions" onclick="event.stopPropagation()">
+            <button class="lz-btn" onclick="addGridCol()">+ Column</button>
+            <button class="lz-btn" onclick="addGridDataRow()">+ Row</button>
+          </div>
+          <svg class="lz-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="lz-body" id="bodyContent"></div>
+      </div>
+
+      <!-- ═══════════ FOOTER ZONE ═══════════ -->
+      <div class="lz" id="zoneFooter">
+        <div class="lz-bar" onclick="toggleZone('zoneFooter',this)">
+          <div class="lz-badge" style="background:#7c3aed">F</div>
+          <span class="lz-name">Footer / Summary</span>
+          <span class="lz-meta" id="ftrMeta">0 fields</span>
+          <div class="lz-actions" onclick="event.stopPropagation()">
+            <button class="lz-btn" onclick="addFooterRow()">+ Row</button>
+          </div>
+          <svg class="lz-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="lz-body" id="footerContent"></div>
+      </div>
+
+    </div><!-- /cv-card -->
   </main>
 
-  <!-- PROPS -->
+  <!-- ── PROPERTIES ──────────────────────────────────────── -->
   <aside class="col-props">
     <div class="ph">
       <span class="pt">Properties</span>
-      <span class="pbadge" id="propsBadge" style="display:none">TEXT</span>
+      <span class="pbadge" id="propsBadge" style="display:none">FIELD</span>
     </div>
     <div class="pb" id="propsBody">
       <div class="pe" id="propsEmpty">
         <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
-        <div>Select a field to<br>edit its properties</div>
+        <div>Select any element<br>to edit its properties</div>
       </div>
       <div id="propsContent" style="display:none;flex-direction:column;gap:16px;"></div>
     </div>
@@ -221,161 +401,835 @@ body{font-family:var(--f);background:var(--g50);color:var(--g900);height:100vh;d
       <button class="btn-apl" id="btnApply">Apply</button>
     </div>
   </aside>
-</div>
+
+</div><!-- /workspace -->
 
 <div class="ghost" id="ghost"><span id="gIcon"></span><span id="gLabel"></span></div>
 <div class="toast" id="toast"></div>
 
 <script>
-/* ── COMPONENT DEFINITIONS ─────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   COMPONENT DEFINITIONS  (identical to original + 3 extras)
+═══════════════════════════════════════════════════════════════ */
 const COMPS = [
-  {id:'text',     name:'Text Input',  desc:'Short/Long text',   badge:'TEXT INPUT', color:'#2563eb', ph:'e.g. Acme Corp',   lbl:'Text Field',
+  {id:'text',      name:'Text Input',   desc:'Short/Long text',    badge:'TEXT INPUT', color:'#2563eb', ph:'e.g. Acme Corp',   lbl:'Text Field',
    icon:`<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>`,mockType:'text'},
-  {id:'numeric',  name:'Numeric',     desc:'Integers, decimals',badge:'NUMERIC',    color:'#7c3aed', ph:'0.00',             lbl:'Number Field',
+  {id:'numeric',   name:'Numeric',      desc:'Integers, decimals', badge:'NUMERIC',    color:'#7c3aed', ph:'0.00',             lbl:'Number Field',
    icon:`<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>`,mockType:'number'},
-  {id:'date',     name:'Date Picker', desc:'Calendar select',   badge:'DATE',       color:'#059669', ph:'MM / DD / YYYY',   lbl:'Date Field',
+  {id:'date',      name:'Date Picker',  desc:'Calendar select',    badge:'DATE',       color:'#059669', ph:'MM / DD / YYYY',   lbl:'Date Field',
    icon:`<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,mockType:'text'},
-  {id:'dropdown', name:'Dropdown',    desc:'Single selection',  badge:'DROPDOWN',   color:'#d97706', ph:'Select an option…',lbl:'Dropdown Field',
+  {id:'dropdown',  name:'Dropdown',     desc:'Single selection',   badge:'DROPDOWN',   color:'#d97706', ph:'Select an option…',lbl:'Dropdown Field',
    icon:`<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>`,mockType:'text'},
-  {id:'dimension',name:'Dimension',   desc:'Units & scales',    badge:'DIMENSION',  color:'#db2777', ph:'0 px',             lbl:'Dimension Field',
+  {id:'dimension', name:'Dimension',    desc:'Units & scales',     badge:'DIMENSION',  color:'#db2777', ph:'0 px',             lbl:'Dimension Field',
    icon:`<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 3H3v18h18V3z"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>`,mockType:'text'},
+  {id:'currency',  name:'Currency',     desc:'Money / amounts',    badge:'CURRENCY',   color:'#059669', ph:'0.00',             lbl:'Amount',
+   icon:`<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,mockType:'number'},
+  {id:'checkbox',  name:'Checkbox',     desc:'Yes / No toggle',    badge:'CHECKBOX',   color:'#0891b2', ph:'',                 lbl:'Checkbox',
+   icon:`<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><polyline points="9 12 11 14 15 10"/></svg>`,mockType:'text'},
+  {id:'formula',   name:'Formula',      desc:'Computed value',     badge:'FORMULA',    color:'#7c3aed', ph:'=SUM(…)',          lbl:'Formula',
+   icon:`<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 7H9l-4 5 4 5h9"/><line x1="14" y1="12" x2="20" y2="12"/></svg>`,mockType:'text'},
 ];
 
-/* ── STATE ─────────────────────────────────────────────────── */
-// rows: Array<{ rowId:string, cells: Array<Field|null> }>
-// each row has 1-4 cells; null = empty slot
-let rows = [
-  { rowId:rid(), cells:[
-    mkField('text',    'Account Name',       'e.g. Acme Corp', true,  3),
-    mkField('numeric', 'Credit Limit (USD)', '0.00',           false, ''),
-  ]},
-];
-let selUid = rows[0].cells[0].uid;
-let advOpen = true;
-let dragSrc = null; // {type:'comp',compId} | {type:'field',uid,fromRow,fromCol}
-
+/* ═══════════════════════════════════════════════════════════════
+   UTILITIES (same as original)
+═══════════════════════════════════════════════════════════════ */
 function uid(){ return Math.random().toString(36).slice(2,9) }
 function rid(){ return 'r'+Math.random().toString(36).slice(2,8) }
 function gc(id){ return COMPS.find(c=>c.id===id) }
-function mkField(compId,label,ph,req,minLen){
-  return {uid:uid(),compId,label,placeholder:ph,required:req,minLength:minLen,maxLength:''}
+function esc(s){ return String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;') }
+function dots(){
+  return `<svg width="13" height="13" fill="none" viewBox="0 0 24 24">
+    <circle cx="9" cy="5" r="1.3" fill="#94a3b8"/><circle cx="15" cy="5" r="1.3" fill="#94a3b8"/>
+    <circle cx="9" cy="12" r="1.3" fill="#94a3b8"/><circle cx="15" cy="12" r="1.3" fill="#94a3b8"/>
+    <circle cx="9" cy="19" r="1.3" fill="#94a3b8"/><circle cx="15" cy="19" r="1.3" fill="#94a3b8"/>
+  </svg>`
 }
-function findF(u){ for(const r of rows) for(const c of r.cells) if(c&&c.uid===u) return c; return null }
-function findLoc(u){
-  for(let ri=0;ri<rows.length;ri++)
-    for(let ci=0;ci<rows[ri].cells.length;ci++)
-      if(rows[ri].cells[ci]&&rows[ri].cells[ci].uid===u) return {ri,ci}
-  return null
+function mkField(compId, label, ph, req, minLen){
+  return { uid:uid(), compId, label, placeholder:ph, required:req, minLength:minLen, maxLength:'' }
 }
 
-/* ── RENDER COMPONENTS LIST ────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   ── STATE ──────────────────────────────────────────────────────
+   Three independent zones:
+   1. hdrSections  – array of { sid, name, rows[] }
+                     rows = [ { rowId, cells: [Field|null, …] } ]
+   2. gridState    – { columns: [], dataRows: [] }
+   3. footerState  – { rows: [ { frid, cells: [FooterCell] } ] }
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Header state ─── */
+let hdrSections = [
+  {
+    sid: uid(), name: 'Primary Information',
+    rows: [
+      { rowId:rid(), cells:[ mkField('text','Doc Date','29/01/2026',true,''), mkField('text','Doc No','26-27/ 4',false,'') ] },
+      { rowId:rid(), cells:[ mkField('date','Bill of Laden Date','29/01/2026',false,''), mkField('date','Due Date','29/04/2026',false,'') ] },
+      { rowId:rid(), cells:[ mkField('dropdown','Customer Name','Amarawathi Interio Furnishing',true,''), mkField('dropdown','Sales Account','Def Sales Accounts',true,'') ] },
+      { rowId:rid(), cells:[ mkField('text','Narration','',false,''), mkField('text','Currency','Indian Rupees',false,'') ] },
+    ]
+  },
+  {
+    sid: uid(), name: 'GST',
+    rows: [
+      { rowId:rid(), cells:[ mkField('dropdown','CustomerGSTState','37-Andhra Pradesh',false,''), mkField('dropdown','GST SaleType','InterStateB2B',false,'') ] },
+      { rowId:rid(), cells:[ mkField('dropdown','Invoice Type','',false,''), mkField('dropdown','GST Type','OE',false,'') ] },
+      { rowId:rid(), cells:[ mkField('dropdown','GST URType','',false,''), mkField('dropdown','GST ExportType','',false,'') ] },
+      { rowId:rid(), cells:[ mkField('dropdown','GST ReverseCharge','N',false,''), mkField('dropdown','TransactionTaxType','EXCLUSIVE',false,'') ] },
+    ]
+  },
+  { sid: uid(), name: 'Extra Fields', rows: [] },
+];
+let activeSid = hdrSections[0].sid;   // which tab is visible
+
+/* ── Grid state ─── */
+/*  columns: { cid, label, width, align, format, field: Field|null }
+    dataRows: { rid, values: { [cid]: string } }                    */
+let gridCols = [
+  { cid:uid(), label:'#',             width:50,  align:'center', format:'number', field:null },
+  { cid:uid(), label:'Product Code',  width:110, align:'left',   format:'text',   field:mkField('text','Product Code','33',false,'') },
+  { cid:uid(), label:'Product Name',  width:160, align:'left',   format:'text',   field:mkField('text','Product Name','14 pallets',false,'') },
+  { cid:uid(), label:'Category',      width:100, align:'left',   format:'text',   field:mkField('dropdown','Category','None',false,'') },
+  { cid:uid(), label:'GST HSN/SAC',   width:110, align:'left',   format:'text',   field:mkField('text','GST HSN/SAC Code','-',false,'') },
+  { cid:uid(), label:'Description',   width:130, align:'left',   format:'text',   field:mkField('text','Description','',false,'') },
+  { cid:uid(), label:'GST UQC',       width:110, align:'left',   format:'text',   field:mkField('dropdown','GST UQC','NOS-NUMBERS',false,'') },
+  { cid:uid(), label:'Qty',           width:70,  align:'right',  format:'number', field:mkField('numeric','Qty','1.00',false,'') },
+  { cid:uid(), label:'Delivery Date', width:110, align:'center', format:'date',   field:mkField('date','Delivery Date','29/01/2026',false,'') },
+];
+let gridDataRows = [
+  { rid:rid(), values:{ [gridCols[0].cid]:'1', [gridCols[1].cid]:'33', [gridCols[2].cid]:'14 pallets', [gridCols[3].cid]:'None', [gridCols[4].cid]:'-', [gridCols[5].cid]:'', [gridCols[6].cid]:'NOS-NUMBERS', [gridCols[7].cid]:'1.00', [gridCols[8].cid]:'29/01/2026' } },
+  { rid:rid(), values:{} },
+  { rid:rid(), values:{} },
+];
+let selColCid = null;   // selected grid column cid
+let dragColCid = null;  // grid-column drag-reorder
+
+/* ── Footer state ─── */
+/* cells: { fcid, label, aggFn:'SUM'|'AVG'|'COUNT'|'MIN'|'MAX'|'CUSTOM', refColCid:cid|null, value:string } */
+let footerRows = [
+  { frid:rid(), cells:[
+    { fcid:uid(), label:'Total Qty',    aggFn:'SUM',   refColCid: gridCols[7].cid, value:'1.00' },
+    { fcid:uid(), label:'Record Count', aggFn:'COUNT', refColCid: gridCols[0].cid, value:'1'    },
+  ]}
+];
+let selFcid = null;   // selected footer cell fcid
+
+/* ── Shared selection ─── */
+// selUid = header field uid selected (same as original)
+let selUid  = hdrSections[0].rows[0].cells[0].uid;
+let selZone = 'header'; // 'header' | 'grid' | 'footer'
+let advOpen = true;
+let dragSrc = null;  // {type:'comp',compId} | {type:'field',uid,fromSecId,fromRow,fromCol}
+
+/* ═══════════════════════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════════════════════ */
+function switchSbTab(tab){
+  document.getElementById('sbTabComp').classList.toggle('active', tab==='comp');
+  document.getElementById('sbTabStr').classList.toggle('active',  tab==='str');
+  document.getElementById('sbPanelComp').classList.toggle('active', tab==='comp');
+  document.getElementById('sbPanelStr').classList.toggle('active',  tab==='str');
+  if(tab==='str') renderStrTree();
+}
+
 function renderComps(){
-  document.getElementById('compList').innerHTML=COMPS.map(c=>`
+  document.getElementById('compList').innerHTML = COMPS.map(c=>`
     <div class="comp-item" draggable="true" data-cid="${c.id}"
          ondragstart="cDragStart(event,'${c.id}')" ondragend="onDragEnd()">
       <div class="ci">${c.icon}</div>
       <div style="flex:1;min-width:0"><div class="cn">${c.name}</div><div class="cd">${c.desc}</div></div>
       <div style="color:var(--g300)">${dots()}</div>
-    </div>`).join('')
+    </div>`).join('');
 }
-function dots(){return`<svg width="13" height="13" fill="none" viewBox="0 0 24 24"><circle cx="9" cy="5" r="1.3" fill="#94a3b8"/><circle cx="15" cy="5" r="1.3" fill="#94a3b8"/><circle cx="9" cy="12" r="1.3" fill="#94a3b8"/><circle cx="15" cy="12" r="1.3" fill="#94a3b8"/><circle cx="9" cy="19" r="1.3" fill="#94a3b8"/><circle cx="15" cy="19" r="1.3" fill="#94a3b8"/></svg>`}
 
-/* ── RENDER CANVAS ─────────────────────────────────────────── */
-function renderCanvas(){
-  const body=document.getElementById('formBody');
-  const zone=document.getElementById('addRowZone');
-  body.querySelectorAll('.form-row,.row-drop-ind').forEach(e=>e.remove());
+function renderStrTree(){
+  const allHdrFields = hdrSections.reduce((a,s)=>a+s.rows.reduce((b,r)=>b+r.cells.filter(Boolean).length,0),0);
+  const ftrFields    = footerRows.reduce((a,r)=>a+r.cells.length,0);
+  document.getElementById('strTree').innerHTML = `
+    <!-- Header -->
+    <div class="str-zone">
+      <div class="str-zone-hdr">
+        <div class="str-zone-dot" style="background:#2563eb"></div>
+        <span class="str-zone-title">Header</span>
+        <span class="str-zone-count">${allHdrFields} fields</span>
+        <div class="str-zone-add" title="Add section" onclick="addHdrSection()">+</div>
+      </div>
+      <div class="str-items">
+        ${hdrSections.map(s=>`
+          <div class="str-item ${s.sid===activeSid?'active':''}" onclick="switchHdrTab('${s.sid}')">
+            <div class="str-item-dot" style="background:#2563eb"></div>
+            <span style="flex:1">${esc(s.name)}</span>
+            <span style="color:var(--g400);font-size:10px;margin-right:4px">${s.rows.reduce((a,r)=>a+r.cells.filter(Boolean).length,0)}</span>
+            <span class="str-item-del" onclick="delHdrSection('${s.sid}',event)">✕</span>
+          </div>`).join('')}
+        <div class="str-add-row" onclick="addHdrSection()">+ Add section</div>
+      </div>
+    </div>
+    <!-- Body -->
+    <div class="str-zone">
+      <div class="str-zone-hdr">
+        <div class="str-zone-dot" style="background:#059669"></div>
+        <span class="str-zone-title">Body / Grid</span>
+        <span class="str-zone-count">${gridCols.length} cols</span>
+        <div class="str-zone-add" title="Add column" onclick="addGridCol()">+</div>
+      </div>
+      <div class="str-items">
+        ${gridCols.map((c,i)=>`
+          <div class="str-item ${selColCid===c.cid?'active':''}" onclick="selectCol('${c.cid}')">
+            <div class="str-item-dot" style="background:#059669"></div>
+            <span style="flex:1">${esc(c.label)}</span>
+            <span class="str-item-del" onclick="delGridColByCid('${c.cid}',event)">✕</span>
+          </div>`).join('')}
+        <div class="str-add-row" onclick="addGridCol()">+ Add column</div>
+      </div>
+    </div>
+    <!-- Footer -->
+    <div class="str-zone">
+      <div class="str-zone-hdr">
+        <div class="str-zone-dot" style="background:#7c3aed"></div>
+        <span class="str-zone-title">Footer</span>
+        <span class="str-zone-count">${ftrFields} fields</span>
+        <div class="str-zone-add" title="Add row" onclick="addFooterRow()">+</div>
+      </div>
+      <div class="str-items">
+        ${footerRows.map((r,i)=>`
+          <div class="str-item">
+            <div class="str-item-dot" style="background:#7c3aed"></div>
+            <span style="flex:1">Summary Row ${i+1}</span>
+            <span style="color:var(--g400);font-size:10px;margin-right:4px">${r.cells.length} cells</span>
+          </div>`).join('')}
+        <div class="str-add-row" onclick="addFooterRow()">+ Add row</div>
+      </div>
+    </div>`;
+}
 
-  rows.forEach((row,ri)=>{
-    // before-row drop indicator
-    const ind=document.createElement('div');
-    ind.className='row-drop-ind'; ind.id='ind-'+row.rowId;
-    body.insertBefore(ind,zone);
+/* ═══════════════════════════════════════════════════════════════
+   ZONE COLLAPSE TOGGLE
+═══════════════════════════════════════════════════════════════ */
+function toggleZone(zoneId, barEl){
+  barEl.classList.toggle('collapsed');
+}
 
-    const rowEl=document.createElement('div');
-    rowEl.className='form-row'; rowEl.dataset.rowId=row.rowId;
+/* ═══════════════════════════════════════════════════════════════
+   HEADER ZONE RENDER  (uses same row/cell/card system as original)
+═══════════════════════════════════════════════════════════════ */
+function renderHeader(){
+  /* --- tabs --- */
+  document.getElementById('hdrTabs').innerHTML =
+    hdrSections.map(s=>`
+      <div class="hz-tab ${s.sid===activeSid?'active':''}" onclick="switchHdrTab('${s.sid}')">
+        ${esc(s.name)}
+        <span class="tab-del" onclick="delHdrSection('${s.sid}',event)">✕</span>
+      </div>`).join('') +
+    `<div class="hz-tab-add" onclick="addHdrSection()" title="Add section">+</div>`;
 
-    // toolbar
-    const tb=document.createElement('div'); tb.className='row-tb';
-    tb.innerHTML=`<span class="rl">Row ${ri+1} · ${row.cells.length} col${row.cells.length>1?'s':''}</span>
+  /* --- section contents --- */
+  const sectionsEl = document.getElementById('hdrSections');
+  sectionsEl.innerHTML = hdrSections.map(s=>`
+    <div class="hz-sec ${s.sid===activeSid?'active':''}" id="hzsec-${s.sid}" data-sid="${s.sid}"></div>
+  `).join('');
+
+  hdrSections.forEach(sec=>{
+    const cont = document.getElementById('hzsec-'+sec.sid);
+    if(!cont) return;
+    renderSecRows(sec, cont);
+  });
+
+  document.getElementById('hdrMeta').textContent =
+    hdrSections.length + (hdrSections.length===1?' section':' sections');
+}
+
+function renderSecRows(sec, container){
+  container.innerHTML = '';
+
+  sec.rows.forEach((row, ri)=>{
+    /* drop indicator before row */
+    const ind = document.createElement('div');
+    ind.className = 'row-drop-ind'; ind.id = 'ind-'+row.rowId;
+    container.appendChild(ind);
+
+    const rowEl = document.createElement('div');
+    rowEl.className = 'form-row'; rowEl.dataset.rowId = row.rowId; rowEl.dataset.secId = sec.sid;
+
+    /* toolbar */
+    const tb = document.createElement('div'); tb.className = 'row-tb';
+    tb.innerHTML = `
+      <span class="rl">Row ${ri+1} · ${row.cells.length} col${row.cells.length>1?'s':''}</span>
       <span class="rsp2"></span>
-      ${row.cells.length<4?`<button class="rbtn" onclick="addCol('${row.rowId}')">+ Column</button>`:''}
-      <button class="rbtn danger" onclick="delRow('${row.rowId}')">✕ Row</button>`;
+      ${row.cells.length<4?`<button class="rbtn" onclick="hdrAddCol('${sec.sid}','${row.rowId}')">+ Column</button>`:''}
+      <button class="rbtn danger" onclick="hdrDelRow('${sec.sid}','${row.rowId}')">✕ Row</button>`;
     rowEl.appendChild(tb);
 
-    // grid inner
-    const inner=document.createElement('div');
-    inner.className='row-inner';
-    inner.style.gridTemplateColumns=`repeat(${row.cells.length},1fr)`;
+    /* inner grid */
+    const inner = document.createElement('div'); inner.className = 'row-inner';
+    inner.style.gridTemplateColumns = `repeat(${row.cells.length},1fr)`;
 
-    row.cells.forEach((cell,ci)=>{
-      const cellEl=document.createElement('div');
-      cellEl.className='field-cell'+(cell?'':' is-empty');
-      cellEl.dataset.rowId=row.rowId; cellEl.dataset.ci=ci;
+    row.cells.forEach((cell, ci)=>{
+      const cellEl = document.createElement('div');
+      cellEl.className = 'field-cell' + (cell ? '' : ' is-empty');
+      cellEl.dataset.rowId = row.rowId; cellEl.dataset.ci = ci; cellEl.dataset.secId = sec.sid;
 
-      // empty placeholder
-      const emptyTgt=document.createElement('div');
-      emptyTgt.className='cell-empty-tgt'; emptyTgt.textContent='Drop here';
+      const emptyTgt = document.createElement('div');
+      emptyTgt.className = 'cell-empty-tgt'; emptyTgt.textContent = 'Drop here';
       cellEl.appendChild(emptyTgt);
 
       if(cell){
-        const comp=gc(cell.compId);
-        const card=document.createElement('div');
-        card.className='field-card'+(cell.uid===selUid?' selected':'');
-        card.dataset.uid=cell.uid; card.draggable=true;
-        card.innerHTML=`
+        const comp = gc(cell.compId);
+        const card = document.createElement('div');
+        card.className = 'field-card' + (cell.uid===selUid&&selZone==='header' ? ' selected' : '');
+        card.dataset.uid = cell.uid; card.draggable = true;
+        card.innerHTML = `
           <div class="card-handle">${dots()}</div>
-          <button class="fc-del" onclick="delField('${cell.uid}',event)">✕</button>
+          <button class="fc-del" onclick="hdrDelField('${sec.sid}','${cell.uid}',event)">✕</button>
           <div class="fc-label">${esc(cell.label)}</div>
           <input class="fc-input" type="${comp.mockType}" placeholder="${esc(cell.placeholder)}" readonly tabindex="-1"/>
           <div class="fc-badge" style="color:${comp.color}">
             ${comp.icon.replace(/stroke="currentColor"/g,`stroke="${comp.color}"`)}${comp.badge}
           </div>`;
-        card.addEventListener('click',e=>{e.stopPropagation();selField(cell.uid)});
-        card.addEventListener('dragstart',e=>fDragStart(e,cell.uid,row.rowId,ci));
-        card.addEventListener('dragend',onDragEnd);
+        card.addEventListener('click', e=>{ e.stopPropagation(); selHdrField(cell.uid); });
+        card.addEventListener('dragstart', e=>fDragStart(e, cell.uid, sec.sid, row.rowId, ci));
+        card.addEventListener('dragend', onDragEnd);
         cellEl.appendChild(card);
       }
 
-      cellEl.addEventListener('dragover', e=>cellOver(e,row.rowId,ci));
-      cellEl.addEventListener('dragleave',e=>cellLeave(e,cellEl));
-      cellEl.addEventListener('drop',     e=>cellDrop(e,row.rowId,ci));
+      cellEl.addEventListener('dragover',  e=>hdrCellOver(e, row.rowId, ci));
+      cellEl.addEventListener('dragleave', e=>hdrCellLeave(e, cellEl));
+      cellEl.addEventListener('drop',      e=>hdrCellDrop(e, sec.sid, row.rowId, ci));
       inner.appendChild(cellEl);
     });
 
     rowEl.appendChild(inner);
-    body.insertBefore(rowEl,zone);
+    container.appendChild(rowEl);
   });
 
-  // trailing indicator
-  const trail=document.createElement('div');
-  trail.className='row-drop-ind'; trail.id='ind-trail';
-  body.insertBefore(trail,zone);
+  /* trailing drop indicator */
+  const trail = document.createElement('div');
+  trail.className = 'row-drop-ind'; trail.id = 'ind-trail-'+sec.sid;
+  container.appendChild(trail);
+
+  /* add-row drop zone */
+  const zone = document.createElement('div');
+  zone.className = 'sec-drop-zone'; zone.dataset.secId = sec.sid;
+  zone.innerHTML = `<div class="drop-plus">+</div><span>Drop field here to add row</span>`;
+  zone.addEventListener('dragover',  e=>{ e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', ()=> zone.classList.remove('drag-over'));
+  zone.addEventListener('drop',      e=> hdrZoneDrop(e, sec.sid));
+  container.appendChild(zone);
 }
 
-/* ── RENDER PROPS ──────────────────────────────────────────── */
-function renderProps(){
-  const f=findF(selUid);
-  const empty=document.getElementById('propsEmpty');
-  const cont=document.getElementById('propsContent');
-  const badge=document.getElementById('propsBadge');
-  const footer=document.getElementById('propsFooter');
-  if(!f){
-    empty.style.display='flex'; cont.style.display='none';
-    badge.style.display='none'; footer.style.display='none'; return;
+/* ── Header mutations ─────────────────────────────────────── */
+function switchHdrTab(sid){ activeSid=sid; renderHeader(); renderStrTree(); }
+
+function addHdrSection(){
+  const name = prompt('Section name:', 'New Section');
+  if(!name) return;
+  const s = { sid:uid(), name:name.trim(), rows:[] };
+  hdrSections.push(s); activeSid = s.sid;
+  renderHeader(); renderStrTree();
+  showToast(`Section "${name}" added`);
+}
+
+function delHdrSection(sid, e){
+  e && e.stopPropagation();
+  if(hdrSections.length <= 1){ showToast('At least one section required'); return; }
+  hdrSections = hdrSections.filter(s=>s.sid!==sid);
+  if(activeSid===sid) activeSid = hdrSections[0].sid;
+  renderHeader(); renderStrTree();
+  showToast('Section removed');
+}
+
+function hdrAddCol(secId, rowId){
+  const sec = hdrSections.find(s=>s.sid===secId); if(!sec) return;
+  const row = sec.rows.find(r=>r.rowId===rowId); if(!row || row.cells.length>=4) return;
+  row.cells.push(null);
+  renderHeader();
+  showToast('Column added – drop a field into it');
+}
+
+function hdrDelRow(secId, rowId){
+  const sec = hdrSections.find(s=>s.sid===secId); if(!sec) return;
+  sec.rows = sec.rows.filter(r=>r.rowId!==rowId);
+  renderHeader(); renderStrTree();
+  showToast('Row removed');
+}
+
+function hdrDelField(secId, fuid, e){
+  e && e.stopPropagation();
+  const sec = hdrSections.find(s=>s.sid===secId); if(!sec) return;
+  for(const row of sec.rows){
+    const ci = row.cells.findIndex(c=>c&&c.uid===fuid);
+    if(ci !== -1){
+      if(row.cells.length===1) sec.rows = sec.rows.filter(r=>r.rowId!==row.rowId);
+      else row.cells.splice(ci,1);
+      break;
+    }
   }
-  const comp=gc(f.compId);
-  empty.style.display='none'; cont.style.display='flex';
-  badge.style.display='inline-flex'; badge.textContent=comp.id.toUpperCase();
-  footer.style.display='flex';
-  cont.innerHTML=`
+  if(selUid===fuid){ selUid=null; }
+  renderHeader(); renderStrTree(); renderProps();
+  showToast('Field removed');
+}
+
+function selHdrField(u){ selUid=u; selZone='header'; selColCid=null; selFcid=null; renderHeader(); renderProps(); }
+
+function hdrFindField(u){
+  for(const s of hdrSections)
+    for(const r of s.rows)
+      for(const c of r.cells)
+        if(c&&c.uid===u) return c;
+  return null;
+}
+function hdrFindLoc(u){
+  for(const s of hdrSections)
+    for(const r of s.rows)
+      for(let ci=0;ci<r.cells.length;ci++)
+        if(r.cells[ci]&&r.cells[ci].uid===u) return{sec:s,row:r,ci};
+  return null;
+}
+
+/* ── Header drag/drop ─────────────────────────────────────── */
+function hdrCellOver(e, rowId, ci){
+  e.preventDefault(); e.stopPropagation();
+  document.querySelector(`.field-cell[data-row-id="${rowId}"][data-ci="${ci}"]`)?.classList.add('drag-over');
+}
+function hdrCellLeave(e, cellEl){
+  if(!cellEl.contains(e.relatedTarget)) cellEl.classList.remove('drag-over');
+}
+function hdrCellDrop(e, secId, rowId, colIdx){
+  e.preventDefault(); e.stopPropagation();
+  document.querySelector(`.field-cell[data-row-id="${rowId}"][data-ci="${colIdx}"]`)?.classList.remove('drag-over');
+  if(!dragSrc) return;
+
+  const sec = hdrSections.find(s=>s.sid===secId); if(!sec) return;
+  const row = sec.rows.find(r=>r.rowId===rowId);   if(!row) return;
+
+  if(dragSrc.type==='comp'){
+    const comp = gc(dragSrc.compId);
+    const nf = mkField(comp.id, comp.lbl, comp.ph, false, '');
+    if(row.cells[colIdx]===null)          row.cells[colIdx] = nf;
+    else if(row.cells.length<4)           row.cells.splice(colIdx,0,nf);
+    else {
+      const ri = sec.rows.findIndex(r=>r.rowId===rowId);
+      sec.rows.splice(ri+1,0,{rowId:rid(),cells:[nf]});
+    }
+    selUid=nf.uid; selZone='header'; selColCid=null; selFcid=null;
+    showToast(`"${comp.name}" added`);
+  } else if(dragSrc.type==='field'){
+    const {uid:su, fromSecId, fromRow, fromCol} = dragSrc;
+    if(fromSecId===secId && fromRow===rowId && fromCol===colIdx) return;
+    const fromSec = hdrSections.find(s=>s.sid===fromSecId);
+    const srcRow  = fromSec?.rows.find(r=>r.rowId===fromRow);
+    if(!srcRow) return;
+    const moving = srcRow.cells[fromCol];
+    const dest   = row.cells[colIdx];
+    if(fromSecId===secId && fromRow===rowId){
+      row.cells[fromCol]=dest; row.cells[colIdx]=moving;
+    } else {
+      if(dest===null){ row.cells[colIdx]=moving; srcRow.cells[fromCol]=null; hdrCleanRow(fromSec,srcRow); }
+      else           { srcRow.cells[fromCol]=dest; row.cells[colIdx]=moving; }
+    }
+    selUid=su; selZone='header';
+    showToast('Field moved');
+  }
+  renderHeader(); renderStrTree(); renderProps();
+}
+
+function hdrZoneDrop(e, secId){
+  e.preventDefault(); e.target.closest('.sec-drop-zone')?.classList.remove('drag-over');
+  if(!dragSrc) return;
+  const sec = hdrSections.find(s=>s.sid===secId); if(!sec) return;
+  if(dragSrc.type==='comp'){
+    const comp=gc(dragSrc.compId);
+    const nf=mkField(comp.id,comp.lbl,comp.ph,false,'');
+    sec.rows.push({rowId:rid(),cells:[nf]});
+    selUid=nf.uid; selZone='header'; selColCid=null; selFcid=null;
+    showToast(`New row with "${comp.name}"`);
+  } else if(dragSrc.type==='field'){
+    const {uid:su,fromSecId,fromRow,fromCol}=dragSrc;
+    const fromSec=hdrSections.find(s=>s.sid===fromSecId);
+    const srcRow=fromSec?.rows.find(r=>r.rowId===fromRow);
+    if(!srcRow) return;
+    const moving=srcRow.cells[fromCol];
+    srcRow.cells[fromCol]=null; hdrCleanRow(fromSec,srcRow);
+    sec.rows.push({rowId:rid(),cells:[moving]});
+    selUid=su; selZone='header';
+    showToast('Moved to new row');
+  }
+  renderHeader(); renderStrTree(); renderProps();
+}
+
+function hdrCleanRow(sec, row){
+  while(row.cells.length>1 && row.cells[row.cells.length-1]===null) row.cells.pop();
+  if(row.cells.every(c=>c===null)) sec.rows=sec.rows.filter(r=>r.rowId!==row.rowId);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BODY / GRID ZONE
+═══════════════════════════════════════════════════════════════ */
+function renderBody(){
+  const cont = document.getElementById('bodyContent');
+  document.getElementById('bodyMeta').textContent =
+    gridCols.length + (gridCols.length===1?' column':' columns') + ' · ' + gridDataRows.length + ' rows';
+
+  if(gridCols.length===0){
+    cont.innerHTML = `
+      <div class="grid-drop-zone" id="gridMainDrop">
+        <div class="drop-plus">+</div>
+        <span>Drop a component here to create the first column</span>
+      </div>`;
+    wireGridMainDrop();
+    return;
+  }
+
+  /* build table */
+  let html = `<div class="grid-wrap"><div class="grid-outer">`;
+
+  /* --- column header row --- */
+  html += `<div class="grid-head"><div class="grid-rn-hd">#</div>`;
+  gridCols.forEach(col=>{
+    const isSel = selColCid===col.cid;
+    html += `
+      <div class="grid-col-th ${isSel?'sel':''}" data-cid="${col.cid}"
+           draggable="true"
+           ondragstart="gridColDragStart(event,'${col.cid}')"
+           ondragover="gridColDragOver(event,'${col.cid}',event)"
+           ondragleave="gridColDragLeave(event,'${col.cid}')"
+           ondrop="gridColDrop(event,'${col.cid}')"
+           ondragend="gridColDragEnd(event)"
+           onclick="selectCol('${col.cid}')">
+        <span class="col-th-drag" title="Drag to reorder">${dots()}</span>
+        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(col.label)}</span>
+        ${col.field?`<span style="width:8px;height:8px;border-radius:50%;background:${gc(col.field.compId)?.color||'#ccc'};flex-shrink:0;display:inline-block"></span>`:''}
+        <button class="col-th-del" onclick="delGridColByCid('${col.cid}',event)">✕</button>
+      </div>`;
+  });
+  html += `<div class="grid-col-th-add" onclick="addGridCol()">+ Col</div></div>`;
+
+  /* --- data rows --- */
+  html += `<div class="grid-rows">`;
+  gridDataRows.forEach((row,ri)=>{
+    html += `<div class="grid-row"><div class="grid-rn">${ri+1}</div>`;
+    gridCols.forEach(col=>{
+      const val = row.values[col.cid]||'';
+      const isSel = selColCid===col.cid;
+      html += `
+        <div class="grid-cell${isSel?' sel':''}"
+             onclick="selectCol('${col.cid}')"
+             ondragover="gridCellOver(event,this)"
+             ondragleave="gridCellLeave(event,this)"
+             ondrop="gridCellDrop(event,'${col.cid}','${row.rid}')">
+          ${val ? esc(val) : `<span class="gc-empty-hint">
+            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            —
+          </span>`}
+        </div>`;
+    });
+    html += `</div>`;
+  });
+  html += `</div>`;
+
+  /* add-row button */
+  html += `<div class="grid-add-row" onclick="addGridDataRow()">
+    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Add Row
+  </div>`;
+
+  html += `</div></div>`;
+  cont.innerHTML = html;
+}
+
+function wireGridMainDrop(){
+  const z = document.getElementById('gridMainDrop');
+  if(!z) return;
+  z.addEventListener('dragover',  e=>{ e.preventDefault(); z.classList.add('drag-over'); });
+  z.addEventListener('dragleave', ()=> z.classList.remove('drag-over'));
+  z.addEventListener('drop',      e=>{ e.preventDefault(); z.classList.remove('drag-over');
+    if(!dragSrc || dragSrc.type!=='comp') return;
+    const comp = gc(dragSrc.compId);
+    const newCol = { cid:uid(), label:comp.lbl, width:120, align:'left', format:'text', field:mkField(comp.id,comp.lbl,comp.ph,false,'') };
+    gridCols.push(newCol);
+    gridDataRows.forEach(r=>r.values[newCol.cid]='');
+    selColCid=newCol.cid; selZone='grid';
+    renderBody(); renderStrTree(); renderProps();
+    showToast(`Column "${comp.lbl}" created`);
+  });
+}
+
+/* ── Grid column actions ──────────────────────────────────── */
+function addGridCol(){
+  const label = prompt('Column label:', 'New Column');
+  if(!label) return;
+  const newCol = { cid:uid(), label:label.trim(), width:120, align:'left', format:'text', field:null };
+  gridCols.push(newCol);
+  gridDataRows.forEach(r=>r.values[newCol.cid]='');
+  selColCid=newCol.cid; selZone='grid'; selUid=null; selFcid=null;
+  renderBody(); renderStrTree(); renderProps();
+  showToast(`Column "${label}" added`);
+}
+
+function addGridDataRow(){
+  const row = { rid:rid(), values:{} };
+  gridCols.forEach(c=>row.values[c.cid]='');
+  gridDataRows.push(row);
+  renderBody();
+  showToast('Row added');
+}
+
+function delGridColByCid(cid, e){
+  e && e.stopPropagation();
+  gridCols = gridCols.filter(c=>c.cid!==cid);
+  gridDataRows.forEach(r=>delete r.values[cid]);
+  if(selColCid===cid){ selColCid=null; }
+  renderBody(); renderStrTree(); renderProps();
+  showToast('Column removed');
+}
+
+function selectCol(cid){
+  selColCid=cid; selZone='grid'; selUid=null; selFcid=null;
+  renderBody(); renderStrTree(); renderProps();
+}
+
+/* ── Grid column drag-reorder ─────────────────────────────── */
+function gridColDragStart(e, cid){
+  dragColCid = cid;
+  e.dataTransfer.effectAllowed = 'move';
+  setBlankDragImage(e);
+}
+function gridColDragOver(e, cid){
+  if(!dragColCid || dragColCid===cid) return;
+  e.preventDefault(); e.stopPropagation();
+  document.querySelectorAll('.grid-col-th').forEach(el=>el.classList.toggle('col-drag-over', el.dataset.cid===cid));
+}
+function gridColDragLeave(e, cid){
+  document.querySelector(`.grid-col-th[data-cid="${cid}"]`)?.classList.remove('col-drag-over');
+}
+function gridColDrop(e, toCid){
+  e.preventDefault(); e.stopPropagation();
+  document.querySelectorAll('.col-drag-over').forEach(el=>el.classList.remove('col-drag-over'));
+  if(!dragColCid || dragColCid===toCid){ dragColCid=null; return; }
+  const fi=gridCols.findIndex(c=>c.cid===dragColCid);
+  const ti=gridCols.findIndex(c=>c.cid===toCid);
+  const [col]=gridCols.splice(fi,1);
+  gridCols.splice(ti,0,col);
+  dragColCid=null;
+  renderBody();
+  showToast('Column reordered');
+}
+function gridColDragEnd(){ dragColCid=null; document.querySelectorAll('.col-drag-over').forEach(el=>el.classList.remove('col-drag-over')); }
+
+/* ── Grid cell drag-drop (assign field to column) ─────────── */
+function gridCellOver(e, el){ e.preventDefault(); el.classList.add('drop-tgt'); }
+function gridCellLeave(e, el){ el.classList.remove('drop-tgt'); }
+function gridCellDrop(e, colCid, rowRid){
+  e.preventDefault(); e.target.closest('.grid-cell')?.classList.remove('drop-tgt');
+  if(!dragSrc || dragSrc.type!=='comp') return;
+  const comp = gc(dragSrc.compId);
+  const col = gridCols.find(c=>c.cid===colCid); if(!col) return;
+  /* Assign the component as this column's field type (if not already set) */
+  if(!col.field) col.field = mkField(comp.id, comp.lbl, comp.ph, false, '');
+  /* Also set the cell value to a sample */
+  const row = gridDataRows.find(r=>r.rid===rowRid);
+  if(row) row.values[colCid] = comp.ph||comp.lbl;
+  selColCid=colCid; selZone='grid'; selUid=null; selFcid=null;
+  renderBody(); renderProps();
+  showToast(`"${comp.name}" assigned to column`);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER ZONE
+═══════════════════════════════════════════════════════════════ */
+const AGG_FNS = ['SUM','AVG','COUNT','MIN','MAX','CUSTOM'];
+
+function renderFooter(){
+  const cont = document.getElementById('footerContent');
+  const total = footerRows.reduce((a,r)=>a+r.cells.length,0);
+  document.getElementById('ftrMeta').textContent = total + (total===1?' field':' fields');
+
+  if(footerRows.length===0){
+    cont.innerHTML = `
+      <div class="footer-empty-state">No summary rows yet.<br>Click <strong>+ Row</strong> to add aggregations.</div>`;
+    return;
+  }
+
+  let html = `<div class="footer-wrap"><div class="footer-grid">`;
+  footerRows.forEach(row=>{
+    html += `<div class="footer-row">`;
+    row.cells.forEach(cell=>{
+      const refCol = gridCols.find(c=>c.cid===cell.refColCid);
+      const isSel  = selFcid===cell.fcid;
+      html += `
+        <div class="footer-cell ${isSel?'sel':''}" onclick="selectFtrCell('${cell.fcid}')">
+          <button class="fc2-del" onclick="delFtrCell('${row.frid}','${cell.fcid}',event)">✕</button>
+          <div class="fc2-label">${esc(cell.label)}</div>
+          <div class="fc2-value">${esc(cell.value)}</div>
+          <div class="fc2-formula">${cell.aggFn}${refCol?' · '+esc(refCol.label):''}</div>
+        </div>`;
+    });
+    /* drop slot to add more cells to this row */
+    html += `
+      <div class="footer-drop-slot"
+           ondragover="ftrDropOver(event,this)"
+           ondragleave="ftrDropLeave(event,this)"
+           ondrop="ftrDropCell(event,'${row.frid}')">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        &nbsp;Drop field
+      </div>`;
+    html += `</div>`;
+  });
+  html += `</div></div>`;
+  cont.innerHTML = html;
+}
+
+/* ── Footer actions ───────────────────────────────────────── */
+function addFooterRow(){
+  /* create one default cell if we have grid columns */
+  const cells = gridCols.length ? [{
+    fcid:uid(), label:'Total', aggFn:'SUM',
+    refColCid: gridCols[gridCols.length-1].cid, value:'0'
+  }] : [];
+  footerRows.push({ frid:rid(), cells });
+  renderFooter(); renderStrTree();
+  showToast('Summary row added');
+}
+
+function selectFtrCell(fcid){
+  selFcid=fcid; selZone='footer'; selUid=null; selColCid=null;
+  renderFooter(); renderProps();
+}
+
+function delFtrCell(frid, fcid, e){
+  e && e.stopPropagation();
+  const row = footerRows.find(r=>r.frid===frid); if(!row) return;
+  row.cells = row.cells.filter(c=>c.fcid!==fcid);
+  if(!row.cells.length) footerRows = footerRows.filter(r=>r.frid!==frid);
+  if(selFcid===fcid){ selFcid=null; }
+  renderFooter(); renderStrTree(); renderProps();
+  showToast('Summary field removed');
+}
+
+function ftrDropOver(e, el){ e.preventDefault(); el.classList.add('drag-over'); }
+function ftrDropLeave(e, el){ el.classList.remove('drag-over'); }
+function ftrDropCell(e, frid){
+  e.preventDefault(); e.target.closest('.footer-drop-slot')?.classList.remove('drag-over');
+  if(!dragSrc || dragSrc.type!=='comp') return;
+  const comp = gc(dragSrc.compId);
+  const row  = footerRows.find(r=>r.frid===frid); if(!row) return;
+  /* find best matching column */
+  const matchCol = gridCols.find(c=>c.field?.compId===comp.id);
+  const defaultAgg = ['numeric','currency','formula'].includes(comp.id) ? 'SUM' : 'COUNT';
+  const newCell = {
+    fcid:uid(), label:comp.lbl, aggFn:defaultAgg,
+    refColCid: matchCol ? matchCol.cid : (gridCols[0]?.cid||null),
+    value:'—'
+  };
+  row.cells.push(newCell);
+  selFcid=newCell.fcid; selZone='footer'; selUid=null; selColCid=null;
+  renderFooter(); renderProps();
+  showToast(`Summary field "${comp.lbl}" added`);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PROPERTIES PANEL
+═══════════════════════════════════════════════════════════════ */
+function renderProps(){
+  const empty   = document.getElementById('propsEmpty');
+  const cont    = document.getElementById('propsContent');
+  const badge   = document.getElementById('propsBadge');
+  const ftr     = document.getElementById('propsFooter');
+
+  function showProps(badgeText, badgeColor, html){
+    empty.style.display='none'; cont.style.display='flex';
+    badge.style.display='inline-flex'; badge.textContent=badgeText; badge.style.background=badgeColor;
+    ftr.style.display='flex'; cont.innerHTML=html;
+    document.getElementById('btnApply').onclick = ()=>showToast('Applied ✓');
+    document.getElementById('btnReset').onclick = ()=>{ renderProps(); showToast('Reset'); };
+  }
+  function hideProps(){
+    empty.style.display='flex'; cont.style.display='none';
+    badge.style.display='none'; ftr.style.display='none';
+  }
+
+  /* ── Grid column selected ── */
+  if(selZone==='grid' && selColCid){
+    const col = gridCols.find(c=>c.cid===selColCid);
+    if(!col){ hideProps(); return; }
+    showProps('COLUMN','#059669',`
+      <div class="pg"><div class="pl">Column Label</div>
+        <input class="pi" value="${esc(col.label)}" oninput="updColProp('label',this.value)"/></div>
+      <div class="pg"><div class="pl">Width (px)</div>
+        <input class="pi" type="number" value="${col.width}" oninput="updColProp('width',+this.value)"/></div>
+      <div class="pg"><div class="pl">Alignment</div>
+        <div class="pp-seg">
+          ${['left','center','right'].map(a=>`
+            <div class="pp-seg-btn ${col.align===a?'active':''}" onclick="updColProp('align','${a}')">${a.charAt(0).toUpperCase()+a.slice(1)}</div>`).join('')}
+        </div></div>
+      <div class="pg"><div class="pl">Format</div>
+        <select class="pi-sel" onchange="updColProp('format',this.value)">
+          ${['text','number','currency','date','percent','boolean'].map(f=>`
+            <option value="${f}" ${col.format===f?'selected':''}>${f.charAt(0).toUpperCase()+f.slice(1)}</option>`).join('')}
+        </select></div>
+      <div class="pp-divider"></div>
+      ${col.field ? `
+        <div class="pg"><div class="pl" style="color:#059669">Assigned Field</div>
+          <div style="display:flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--g200);border-radius:var(--rsm);background:var(--g50)">
+            <span style="width:8px;height:8px;border-radius:50%;background:${gc(col.field.compId)?.color||'#ccc'};flex-shrink:0"></span>
+            <span style="font-size:13px;font-weight:600">${esc(col.field.label)}</span>
+            <span style="font-size:10px;color:var(--g400);flex:1">${gc(col.field.compId)?.badge||''}</span>
+          </div></div>
+        <div class="pg"><div class="pl">Field Label</div>
+          <input class="pi" value="${esc(col.field.label)}" oninput="updColFieldProp('label',this.value)"/></div>
+        <div class="pg"><div class="pl">Placeholder</div>
+          <input class="pi" value="${esc(col.field.placeholder)}" oninput="updColFieldProp('placeholder',this.value)"/></div>
+        <div class="ptr">
+          <div><div class="ptl2">Required</div><div class="pts">Validation on submit</div></div>
+          <label class="toggle"><input type="checkbox" ${col.field.required?'checked':''} onchange="updColFieldProp('required',this.checked)"/>
+          <span class="tslider"></span></label>
+        </div>` :
+        `<div style="text-align:center;padding:12px;color:var(--g400);font-size:12px;border:1px dashed var(--g200);border-radius:var(--r)">
+          Drag a component onto any cell in this column to assign a field type
+        </div>`}
+    `);
+    return;
+  }
+
+  /* ── Footer cell selected ── */
+  if(selZone==='footer' && selFcid){
+    let cell = null;
+    for(const row of footerRows) cell = cell || row.cells.find(c=>c.fcid===selFcid);
+    if(!cell){ hideProps(); return; }
+    const refCol = gridCols.find(c=>c.cid===cell.refColCid);
+    showProps('SUMMARY','#7c3aed',`
+      <div class="pg"><div class="pl">Label</div>
+        <input class="pi" value="${esc(cell.label)}" oninput="updFtrProp('label',this.value)"/></div>
+      <div class="pg"><div class="pl">Aggregation Function</div>
+        <select class="pi-sel" onchange="updFtrProp('aggFn',this.value)">
+          ${AGG_FNS.map(fn=>`<option value="${fn}" ${cell.aggFn===fn?'selected':''}>${fn}</option>`).join('')}
+        </select></div>
+      <div class="pg"><div class="pl">Reference Column</div>
+        <select class="pi-sel" onchange="updFtrProp('refColCid',this.value)">
+          <option value="">— none —</option>
+          ${gridCols.map(c=>`<option value="${c.cid}" ${cell.refColCid===c.cid?'selected':''}>${esc(c.label)}</option>`).join('')}
+        </select></div>
+      <div class="pg"><div class="pl">Display Value</div>
+        <input class="pi" value="${esc(cell.value)}" oninput="updFtrProp('value',this.value)"/></div>
+      ${refCol?`<div style="padding:8px 10px;background:var(--g50);border-radius:var(--rsm);font-size:12px;color:var(--g500)">
+        <strong>${cell.aggFn}</strong> of <strong>${esc(refCol.label)}</strong>
+      </div>`:''}
+    `);
+    return;
+  }
+
+  /* ── Header field selected (original behaviour) ── */
+  const f = hdrFindField(selUid);
+  if(!f){ hideProps(); return; }
+  const comp = gc(f.compId);
+  showProps(comp.id.toUpperCase(), comp.color, `
     <div class="pg"><div class="pl">Field Label</div>
-      <input class="pi" value="${esc(f.label)}" oninput="liveUpd('label',this.value)"/></div>
+      <input class="pi" value="${esc(f.label)}" oninput="liveUpdHdr('label',this.value)"/></div>
     <div class="pg"><div class="pl">Placeholder</div>
-      <input class="pi" value="${esc(f.placeholder)}" oninput="liveUpd('placeholder',this.value)"/></div>
+      <input class="pi" value="${esc(f.placeholder)}" oninput="liveUpdHdr('placeholder',this.value)"/></div>
     <div class="ptr">
       <div><div class="ptl2">Required Field</div><div class="pts">Validation will trigger</div></div>
-      <label class="toggle"><input type="checkbox" ${f.required?'checked':''} onchange="liveUpd('required',this.checked)"/><span class="tslider"></span></label>
+      <label class="toggle"><input type="checkbox" ${f.required?'checked':''} onchange="liveUpdHdr('required',this.checked)"/>
+      <span class="tslider"></span></label>
     </div>
     <div class="pdiv ${advOpen?'open':''}" onclick="togAdv()" id="advDiv">
       <span class="pdiv-label">Advanced Settings</span>
@@ -384,204 +1238,110 @@ function renderProps(){
     </div>
     <div class="adv ${advOpen?'':'hidden'}" id="advSet">
       <div class="pg"><div class="pl">Minimum Length</div>
-        <input class="pi" type="number" value="${f.minLength}" placeholder="—" oninput="liveUpd('minLength',this.value)"/></div>
+        <input class="pi" type="number" value="${f.minLength}" placeholder="—" oninput="liveUpdHdr('minLength',this.value)"/></div>
       <div class="pg"><div class="pl">Maximum Length</div>
-        <input class="pi" type="number" value="${f.maxLength||''}" placeholder="—" oninput="liveUpd('maxLength',this.value)"/></div>
-    </div>`;
-  document.getElementById('btnApply').onclick=()=>showToast('Properties applied ✓');
-  document.getElementById('btnReset').onclick=()=>{renderProps();showToast('Properties reset')};
+        <input class="pi" type="number" value="${f.maxLength||''}" placeholder="—" oninput="liveUpdHdr('maxLength',this.value)"/></div>
+    </div>
+  `);
 }
 
+/* ── Prop update helpers ──────────────────────────────────── */
+function liveUpdHdr(k,v){ const f=hdrFindField(selUid); if(!f)return; f[k]=v; renderHeader(); }
+function updColProp(k,v){
+  const col=gridCols.find(c=>c.cid===selColCid); if(!col)return; col[k]=v; renderBody(); renderProps();
+}
+function updColFieldProp(k,v){
+  const col=gridCols.find(c=>c.cid===selColCid); if(!col||!col.field)return; col.field[k]=v; renderBody();
+}
+function updFtrProp(k,v){
+  for(const row of footerRows){ const c=row.cells.find(c=>c.fcid===selFcid); if(c){ c[k]=v; renderFooter(); renderProps(); return; } }
+}
 function togAdv(){
   advOpen=!advOpen;
-  document.getElementById('advDiv').classList.toggle('open',advOpen);
-  document.getElementById('advSet').classList.toggle('hidden',!advOpen);
-}
-function liveUpd(k,v){ const f=findF(selUid); if(!f)return; f[k]=v; renderCanvas() }
-function selField(u){ selUid=u; renderCanvas(); renderProps() }
-
-function delField(u,e){
-  e&&e.stopPropagation();
-  for(const row of rows){
-    const ci=row.cells.findIndex(c=>c&&c.uid===u);
-    if(ci!==-1){
-      if(row.cells.length===1) rows=rows.filter(r=>r.rowId!==row.rowId);
-      else row.cells.splice(ci,1);
-      break;
-    }
-  }
-  if(selUid===u) selUid=rows.length&&rows[0].cells.find(Boolean)?.uid||null;
-  renderCanvas(); renderProps(); showToast('Field removed');
+  document.getElementById('advDiv')?.classList.toggle('open',advOpen);
+  document.getElementById('advSet')?.classList.toggle('hidden',!advOpen);
 }
 
-function delRow(rowId){
-  rows=rows.filter(r=>r.rowId!==rowId);
-  selUid=rows.length?rows[0].cells.find(Boolean)?.uid||null:null;
-  renderCanvas(); renderProps(); showToast('Row removed');
-}
-
-function addCol(rowId){
-  const row=rows.find(r=>r.rowId===rowId);
-  if(!row||row.cells.length>=4)return;
-  row.cells.push(null);
-  renderCanvas(); showToast('Column added – drop a field into it');
-}
-
-/* ── DRAG SOURCES ──────────────────────────────────────────── */
-function cDragStart(e,compId){
-  dragSrc={type:'comp',compId};
-  e.dataTransfer.effectAllowed='copy';
+/* ═══════════════════════════════════════════════════════════════
+   DRAG SOURCES
+═══════════════════════════════════════════════════════════════ */
+function cDragStart(e, compId){
+  dragSrc = { type:'comp', compId };
+  e.dataTransfer.effectAllowed = 'copy';
   setBlankDragImage(e);
-  const comp=gc(compId);
-  showGhost(comp.name,comp.icon);
-  document.querySelector(`[data-cid="${compId}"]`).classList.add('is-dragging');
+  const comp = gc(compId);
+  showGhost(comp.name, comp.icon);
+  document.querySelector(`[data-cid="${compId}"]`)?.classList.add('is-dragging');
 }
 
-function fDragStart(e,u,fromRow,fromCol){
-  dragSrc={type:'field',uid:u,fromRow,fromCol};
-  e.dataTransfer.effectAllowed='move';
+function fDragStart(e, u, fromSecId, fromRow, fromCol){
+  dragSrc = { type:'field', uid:u, fromSecId, fromRow, fromCol };
+  e.dataTransfer.effectAllowed = 'move';
   setBlankDragImage(e);
-  const f=findF(u); if(!f)return;
-  showGhost(f.label,gc(f.compId).icon);
+  const f = hdrFindField(u); if(!f) return;
+  showGhost(f.label, gc(f.compId).icon);
   setTimeout(()=>{
-    const card=document.querySelector(`.field-card[data-uid="${u}"]`);
-    if(card)card.classList.add('field-dragging');
-  },0);
+    document.querySelector(`.field-card[data-uid="${u}"]`)?.classList.add('field-dragging');
+  }, 0);
 }
 
 function onDragEnd(){
-  dragSrc=null; hideGhost();
+  dragSrc = null; hideGhost();
   document.querySelectorAll('.is-dragging,.field-dragging').forEach(el=>el.classList.remove('is-dragging','field-dragging'));
-  document.querySelectorAll('.drag-over').forEach(el=>el.classList.remove('drag-over'));
+  document.querySelectorAll('.drag-over,.drop-tgt').forEach(el=>el.classList.remove('drag-over','drop-tgt'));
   document.querySelectorAll('.row-drop-ind.active').forEach(el=>el.classList.remove('active'));
 }
 
-/* ── CELL DROP HANDLERS ────────────────────────────────────── */
-function cellOver(e,rowId,ci){
-  e.preventDefault(); e.stopPropagation();
-  const cellEl=document.querySelector(`.field-cell[data-row-id="${rowId}"][data-ci="${ci}"]`);
-  if(cellEl)cellEl.classList.add('drag-over');
-}
-function cellLeave(e,cellEl){
-  if(!cellEl.contains(e.relatedTarget))cellEl.classList.remove('drag-over');
-}
-function cellDrop(e,rowId,colIdx){
-  e.preventDefault(); e.stopPropagation();
-  const cellEl=document.querySelector(`.field-cell[data-row-id="${rowId}"][data-ci="${colIdx}"]`);
-  if(cellEl)cellEl.classList.remove('drag-over');
-  if(!dragSrc)return;
-
-  const row=rows.find(r=>r.rowId===rowId); if(!row)return;
-
-  if(dragSrc.type==='comp'){
-    const comp=gc(dragSrc.compId);
-    const nf=newField(comp);
-    if(row.cells[colIdx]===null){
-      row.cells[colIdx]=nf;
-    } else if(row.cells.length<4){
-      row.cells.splice(colIdx,0,nf);
-    } else {
-      // row full → new row below
-      const ri=rows.findIndex(r=>r.rowId===rowId);
-      rows.splice(ri+1,0,{rowId:rid(),cells:[nf]});
-    }
-    selUid=nf.uid;
-    showToast(`"${comp.name}" added`);
-  } else {
-    const {uid:su,fromRow,fromCol}=dragSrc;
-    if(fromRow===rowId&&fromCol===colIdx)return;
-    const srcRow=rows.find(r=>r.rowId===fromRow);
-    const moving=srcRow.cells[fromCol];
-    const dest=row.cells[colIdx];
-    if(fromRow===rowId){
-      // same row swap
-      row.cells[fromCol]=dest; row.cells[colIdx]=moving;
-    } else {
-      if(dest===null){
-        row.cells[colIdx]=moving; srcRow.cells[fromCol]=null; cleanRow(srcRow);
-      } else {
-        srcRow.cells[fromCol]=dest; row.cells[colIdx]=moving;
-      }
-    }
-    selUid=su;
-    showToast('Field moved');
-  }
-  renderCanvas(); renderProps();
-}
-
-/* ── ADD-ROW ZONE ──────────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded',()=>{
-  const zone=document.getElementById('addRowZone');
-  zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag-over')});
-  zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
-  zone.addEventListener('drop',e=>{
-    e.preventDefault(); zone.classList.remove('drag-over');
-    if(!dragSrc)return;
-    if(dragSrc.type==='comp'){
-      const comp=gc(dragSrc.compId); const nf=newField(comp);
-      rows.push({rowId:rid(),cells:[nf]}); selUid=nf.uid;
-      showToast(`New row with "${comp.name}"`);
-    } else {
-      const {uid:su,fromRow,fromCol}=dragSrc;
-      const srcRow=rows.find(r=>r.rowId===fromRow);
-      const moving=srcRow.cells[fromCol];
-      srcRow.cells[fromCol]=null; cleanRow(srcRow);
-      rows.push({rowId:rid(),cells:[moving]}); selUid=su;
-      showToast('Moved to new row');
-    }
-    renderCanvas(); renderProps();
-  });
-});
-
-/* ── ROW INSERTION INDICATORS on dragover ──────────────────── */
-document.addEventListener('dragover',e=>{
+/* ── global dragover: ghost + row indicators ─────────────── */
+document.addEventListener('dragover', e=>{
   updateGhost(e);
-  if(!dragSrc)return;
-  document.querySelectorAll('.row-drop-ind').forEach(el=>el.classList.remove('active'));
-  const inds=[...document.querySelectorAll('.row-drop-ind')];
-  let best=null,bestD=Infinity;
-  inds.forEach(ind=>{
-    const r=ind.getBoundingClientRect();
-    const d=Math.abs(e.clientY-r.top);
-    if(d<bestD){bestD=d;best=ind}
-  });
-  if(best&&bestD<48)best.classList.add('active');
+  if(!dragSrc) return;
+  /* row drop indicators – only for header field drag */
+  if(dragSrc.type==='field'){
+    document.querySelectorAll('.row-drop-ind').forEach(el=>el.classList.remove('active'));
+    const inds = [...document.querySelectorAll('.row-drop-ind')];
+    let best=null, bestD=Infinity;
+    inds.forEach(ind=>{
+      const r=ind.getBoundingClientRect();
+      const d=Math.abs(e.clientY-r.top);
+      if(d<bestD){ bestD=d; best=ind; }
+    });
+    if(best && bestD<48) best.classList.add('active');
+  }
 });
 
-/* ── HELPERS ───────────────────────────────────────────────── */
-function newField(comp){
-  return {uid:uid(),compId:comp.id,label:comp.lbl,placeholder:comp.ph,required:false,minLength:'',maxLength:''}
-}
-function cleanRow(row){
-  while(row.cells.length>1&&row.cells[row.cells.length-1]===null)row.cells.pop();
-  if(row.cells.every(c=>c===null))rows=rows.filter(r=>r.rowId!==row.rowId);
-}
+/* ═══════════════════════════════════════════════════════════════
+   SHARED HELPERS (identical to original)
+═══════════════════════════════════════════════════════════════ */
 function setBlankDragImage(e){
-  const img=new Image();img.src='data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
+  const img=new Image();
+  img.src='data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
   e.dataTransfer.setDragImage(img,0,0);
 }
-function showGhost(label,iconHtml){
-  const g=document.getElementById('ghost');
+function showGhost(label, iconHtml){
   document.getElementById('gLabel').textContent=label;
   document.getElementById('gIcon').innerHTML=iconHtml;
-  g.style.display='flex';
+  document.getElementById('ghost').style.display='flex';
 }
-function hideGhost(){document.getElementById('ghost').style.display='none'}
+function hideGhost(){ document.getElementById('ghost').style.display='none'; }
 function updateGhost(e){
   const g=document.getElementById('ghost');
-  if(g.style.display==='flex'){g.style.left=(e.clientX+14)+'px';g.style.top=(e.clientY+10)+'px'}
+  if(g.style.display==='flex'){ g.style.left=(e.clientX+14)+'px'; g.style.top=(e.clientY+10)+'px'; }
 }
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}
 
 let _tt;
 function showToast(msg){
-  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
-  clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2400);
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('show'),2400);
 }
 
-/* ── BOOT ──────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   BOOT
+═══════════════════════════════════════════════════════════════ */
 renderComps();
-renderCanvas();
+renderHeader();
+renderBody();
+renderFooter();
 renderProps();
 </script>
 </body>
